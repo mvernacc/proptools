@@ -200,7 +200,7 @@ def pump_efficiency_demo():
     from matplotlib import pyplot as plt
     rho = 1000
     m_dot = gpm2m_dot(np.array([50, 100, 150, 350]), rho)
-    N = rpm2radsec(np.linspace(10e3, 200e3))
+    N = rpm2radsec(np.linspace(10e3, 400e3))
     dp = 10e6
     print dp2head(dp, rho)
     for m in m_dot:
@@ -209,7 +209,7 @@ def pump_efficiency_demo():
         for i in xrange(len(N)):
             eta[i] = pump_efficiency(dp, m, rho, N[i])
             Ns_us[i] = pump_specific_speed_us(dp, m, rho, N[i])
-        plt.plot(Ns_us, eta, label='Q = {0:.0f} gpm'.format(m_dot2gpm(m, rho)))
+        plt.semilogx(Ns_us, eta, label='Q = {0:.0f} gpm'.format(m_dot2gpm(m, rho)))
     plt.xlabel('Ns [US units]')
     plt.ylabel('$\eta$ [-]')
     plt.legend()
