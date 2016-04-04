@@ -8,7 +8,7 @@ from __future__ import division
 import nozzle
 import math
 import numpy as np
-from scipy.interpolate import RectBivariateSpline
+from scipy.interpolate import RectBivariateSpline, interp1d
 
 
 def pump_power(dp, m_dot, rho, eta):
@@ -170,7 +170,7 @@ eta = np.array([
     [52.58, 58.67, 62.86, 69.25, 71.00, 69.09, 67.25, 65.61, 61.32],
     [62.07, 66.41, 69.93, 75.66, 76.74, 74.50, 72.47, 70.69, 66.16],
     [67.72, 72.77, 75.82, 81.07, 82.34, 79.62, 77.22, 75.00, 69.86],
-    ])
+    ]) / 100.0
 
 pump_eff_interpolator = RectBivariateSpline(gpm, Ns_us, eta)
 
@@ -197,7 +197,7 @@ def pump_efficiency(dp, m_dot, rho, N):
 
 
 def pump_efficiency_demo():
-    from matplotlib import pyplot as plt
+    plt.figure()
     rho = 1000
     m_dot = gpm2m_dot(np.array([50, 100, 150, 350]), rho)
     N = rpm2radsec(np.linspace(10e3, 400e3))
@@ -214,9 +214,44 @@ def pump_efficiency_demo():
     plt.ylabel('$\eta$ [-]')
     plt.legend()
     plt.grid(True)
-    plt.show()
+
+
+# Turbine efficiency interpolation.
+# From figure 10-9 in Rocket Propulsion Elements.
+# Single-stage impulse turbine.
+uco = np.array([0.03, 0.04, 0.05, 0.07, 0.09, 0.11, 0.14, 0.17, 0.20,
+    0.25, 0.28, 0.33, 0.39, 0.45, 0.49, 0.54, 0.56])
+eta = np.array([10.10, 13.22, 16.68, 20.10, 27.36, 32.01, 39.90,
+    47.01, 53.80, 62.62, 68.06, 74.53, 77.71, 77.53, 75.85, 72.59,
+    69.81]) / 100.0
+ssi_turbine_eff_interpolator = interp1d(uco, eta)
+
+def ssi_turbine_efficiency(uco):
+    ''' Efficiency of a single-stage impulse turbine.
+
+    Data from 10-9 in Rocket Propulsion Elements.
+
+    Arguments:
+        uco: Velocity ratio u / c_o [units: none].
+
+    Returns:
+        turbine efficiency [units: none].
+    '''
+    return ssi_turbine_eff_interpolator(uco)
+
+
+def turbine_efficiency_demo():
+    plt.figure()
+    uco = np.logspace(np.log10(0.04), np.log10(0.5))
+    eta = [ssi_turbine_efficiency(u) for u in uco]
+    plt.loglog(uco, eta)
+    plt.xlabel('$u / c_o$')
+    plt.ylabel('$\eta$')
+    plt.grid(True)
+
 
 if __name__ == '__main__':
-    print pump_specific_speed_us(dp=10e6, m_dot=gpm2m_dot(100, 1000),
-        rho=1000, N=rpm2radsec(100e3))
+    from matplotlib import pyplot as plt
     pump_efficiency_demo()
+    turbine_efficiency_demo()
+    plt.show()
