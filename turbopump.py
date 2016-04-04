@@ -228,6 +228,7 @@ def pump_efficiency(dp, m_dot, rho, N):
     # Specific speed in US units
     Ns_us = pump_specific_speed_us(dp, m_dot, rho, N)
     eta = pump_eff_interpolator(Q, Ns_us)
+    eta = eta[0][0]
     return eta
 
 
