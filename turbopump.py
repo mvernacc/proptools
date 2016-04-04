@@ -26,6 +26,44 @@ def pump_power(dp, m_dot, rho, eta):
     return 1 / eta * dp * m_dot / rho
 
 
+def turbine_enthalpy(p_o, p_e, T_o, gamma, c_p):
+    ''' Get the specific enthalpy drop for a turbine.
+
+    Arguments:
+        p_o: Turbine inlet stagnation pressure [units: same as p_e].
+        p_e: Turbine exit pressure [units: same as p_o].
+        T_o: Turbine inlet stagnation temperature [units: kelvin].
+        gamma: Turbine working gas ratio of specific heats [units: none].
+        c_p: working gas heat capacity at const pressure
+            [units: joule kilogram**-1 kelvin**-1].
+
+    Returns:
+        The specific enthalpy drop across the turbine [units: joule kilogram**-1].
+    '''
+    # Turbine specific enthalpy drop [units: joule kilogram**-1]
+    # Eqn. 6-13 in Huzel and Huang, assumes ideal and calorically perfect gas.
+    return c_p * T_o * (1 - (p_e / p_o)**((gamma -1) / gamma))
+
+
+def turbine_spout_velocity(p_o, p_e, T_o, gamma, c_p):
+    ''' Get the theoretical spouting velocity for a turbine.
+
+    Arguments:
+        p_o: Turbine inlet stagnation pressure [units: same as p_e].
+        p_e: Turbine exit pressure [units: same as p_o].
+        T_o: Turbine inlet stagnation temperature [units: kelvin].
+        gamma: Turbine working gas ratio of specific heats [units: none].
+        c_p: working gas heat capacity at const pressure
+            [units: joule kilogram**-1 kelvin**-1].
+
+    Returns:
+        The theoretical spouting velocity c_o of the turbine [units: mater second**-1].
+    '''
+    dh_turb = turbine_enthalpy(p_o, p_e, T_o, gamma, c_p)
+    c_o = (2 * dh_turb)**0.5
+    return c_o
+
+
 def trubine_power(p_o, p_e, m_dot, T_o, eta, gamma, c_p):
     ''' Get the output drive power for a turbine.
 
@@ -41,9 +79,7 @@ def trubine_power(p_o, p_e, m_dot, T_o, eta, gamma, c_p):
     Returns:
         The shaft power produced by the turbine [units: watt].
     '''
-    # Turbine specific enthalpy drop [units: joule kilogram**-1]
-    # Eqn. 6-13 in Huzel and Huang, assumes ideal and calorically perfect gas.
-    dh_turb = c_p * T_o * (1 - (p_e / p_o)**((gamma -1) / gamma))
+    dh_turb = turbine_enthalpy(p_o, p_e, T_o, gamma, c_p)
 
     # Turbine output power [units: watt]
     power_turb = eta * m_dot * dh_turb
@@ -64,8 +100,7 @@ def gg_dump_isp(p_o, p_te, p_ne, T_o, eta, gamma, c_p, m_molar):
         m_molar: working gas molar mass [units: kilogram mole**-1].
     '''
     # Turbine specific enthalpy drop [units: joule kilogram**-1]
-    # Eqn. 6-13 in Huzel and Huang, assumes ideal and calorically perfect gas.
-    dh_turb_ideal = c_p * T_o * (1 - (p_te / p_o)**((gamma -1) / gamma))
+    dh_turb_ideal = turbine_enthalpy(p_o, p_te, T_o, gamma, c_p)
     dh_turb = eta * dh_turb_ideal
     # Turbine exit temperature
     T_te = T_o - (dh_turb / c_p)
