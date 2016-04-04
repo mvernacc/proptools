@@ -273,7 +273,7 @@ def ssi_turbine_efficiency(uco):
     Returns:
         turbine efficiency [units: none].
     '''
-    return ssi_turbine_eff_interpolator(uco)
+    return float(ssi_turbine_eff_interpolator(uco))
 
 
 def turbine_efficiency_demo():
