@@ -59,6 +59,46 @@ def c_star(gamma, m_molar, T_c):
         / (2 / (gamma + 1))**((gamma + 1) / (2 * (gamma - 1)))
 
 
+def er_from_p(p_c, p_e, gamma):
+    ''' Find the nozzle expansion ratio from thechamber and exit pressures.
+    
+    Arguments:
+        p_c: Nozzle stagnation chamber pressure [units: pascal].
+        p_e: Nozzle exit static pressure [units: pascal].
+        gamma: Exhaust gas ratio of specific heats [units: none].
+
+    Returns:
+        Expansion ratio [units: none]
+    '''
+    # Rocket Propulsion Elements 7th Ed, Equation 3-25
+    AtAe = ((gamma + 1) / 2)**(1 / (gamma - 1)) \
+        * (p_e / p_c)**(1 / gamma) \
+        * ((gamma + 1) / (gamma - 1)*( 1 - (p_e / p_c)**((gamma -1) / gamma)))**0.5
+    er = 1/AtAe
+    return er
+
+
+def throat_area(m_dot, p_c, T_c, gamma, m_molar):
+    ''' Find the nozzle throat area.
+
+    Arguments:
+        p_c: Nozzle stagnation chamber pressure [units: pascal].
+        T_c: Nozzle stagnation temperature [units: kelvin].
+        gamma: Exhaust gas ratio of specific heats [units: none].
+        m_molar: Exhaust gas mean molar mass [units: kilogram mole**-1].
+
+    Returns:
+        Throat area [units: meter**2].
+    '''
+    R = R_univ / m_molar
+    # Find the Throat Area require for the specified mass flow, using
+    # Eocket Propulsion Equations  7th Ed, Equation 3-24
+    A_t = m_dot / ( p_c * gamma \
+        * (2 / (gamma + 1))**((gamma + 1) / (2*gamma - 2)) \
+        / (gamma * R  * T_c)**0.5)
+    return A_t
+
+
 def main():
     # Do sample problem 1-3 from Huzel and Huang.
     # Inputs
