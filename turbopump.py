@@ -85,6 +85,27 @@ def trubine_power(p_o, p_e, m_dot, T_o, eta, gamma, c_p):
     power_turb = eta * m_dot * dh_turb
     return power_turb
 
+
+def turbine_exit_temperature(p_o, p_te, T_o, eta, gamma, c_p):
+    '''Get the turbine exit temperature.
+    
+    Arguments:
+        p_o: turbine inlet stagnation pressure [units: pascal].
+        p_te: turbine exit pressure [units: pascal].
+        T_o: turbine inlet stagnation temperature [units: kelvin].
+        eta: turbine efficiency.
+        gamma: working gas ratio of specific heats [units: none].
+        c_p: working gas heat capacity at const pressure
+            [units: joule kilogram**-1 kelvin**-1].
+    '''
+    # Turbine specific enthalpy drop [units: joule kilogram**-1]
+    dh_turb_ideal = turbine_enthalpy(p_o, p_te, T_o, gamma, c_p)
+    dh_turb = eta * dh_turb_ideal
+    # Turbine exit temperature
+    T_te = T_o - (dh_turb / c_p)
+    return T_te
+
+
 def gg_dump_isp(p_o, p_te, p_ne, T_o, eta, gamma, c_p, m_molar):
     '''Get the specific impulse of a Gas Generator turbine exhaust dump.
     
@@ -99,11 +120,7 @@ def gg_dump_isp(p_o, p_te, p_ne, T_o, eta, gamma, c_p, m_molar):
             [units: joule kilogram**-1 kelvin**-1].
         m_molar: working gas molar mass [units: kilogram mole**-1].
     '''
-    # Turbine specific enthalpy drop [units: joule kilogram**-1]
-    dh_turb_ideal = turbine_enthalpy(p_o, p_te, T_o, gamma, c_p)
-    dh_turb = eta * dh_turb_ideal
-    # Turbine exit temperature
-    T_te = T_o - (dh_turb / c_p)
+    T_te = turbine_exit_temperature(p_o, p_te, T_o, eta, gamma, c_p)
 
     # Dump nozzle thrust coefficient and characteristic velocity.
     # Assume optimal expansion.
