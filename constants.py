@@ -10,3 +10,6 @@ R_univ = 8.314
 
 # Acceleration due to gravity at Earth's surface [units; meter second**-2]
 g = 9.81
+
+# Standard temperature [kelvin]
+T_stp = 273.15
