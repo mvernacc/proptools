@@ -136,3 +136,60 @@ def sphere_mass(a, t, rho):
     '''
     return 4 * pi * a**2 * t * rho
 
+
+def cr_ex_press_sphere(a, t, E, v):
+    ''' Critical external pressure difference to buckle a spherical tank.
+
+    Implements eqn 8-12 in Huzel and Huang.
+
+    Arguments:
+        a: Tank radius [units: meter].
+        t: Wall thickness [units: meter].
+        E: Wall material modulus of elasticity [units: pascal].
+        v: Wall material Poisson's ratio [units: none].
+
+    Returns:
+        Critical external pressure for buckling [units: pascal].
+    '''
+    return 2 * E * t**2 / a**2 * (3 * (1 - v**2))**0.5
+
+
+def cr_ex_press_sphere_end(a, t, E):
+    ''' Critical external pressure difference to buckle a spherical tank end.
+
+    Implements eqn 8-16 in Huzel and Huang.
+
+    Arguments:
+        a: Tank radius [units: meter].
+        t: Wall thickness [units: meter].
+        E: Wall material modulus of elasticity [units: pascal].
+
+    Returns:
+        Critical external pressure for buckling [units: pascal].
+    '''
+    return 0.342 * E * t**2 / a**2
+
+
+def cr_ex_press_cylinder(a, t_c, l_c, E, v):
+    ''' Critical external pressure difference to buckle a cylindrical tank section.
+
+    Implements eqn 8-12 in Huzel and Huang.
+
+    Arguments:
+        a: Tank radius [units: meter].
+        t_c: Tank wall thickness [units: meter].
+        l_c: Cylinder length [units: meter].
+        E: Wall material modulus of elasticity [units: pascal].
+        v: Wall material Poisson's ratio [units: none].
+
+    Returns:
+        Critical external pressure for buckling [units: pascal].
+    '''
+    if l_c < 4.9 * a * (a / t_c)**0.5:
+        # Short tank.
+        return 0.807 * E * t_c**2 / (l_c * a) \
+            * ( (1 / (1 - v**2))**3 * t_c**2 / a**2)**0.25
+    else:
+        # Long tank.
+        return E * t_c**3 / (4 * (1 - v**2) * a**3)
+
