@@ -1,6 +1,6 @@
 import unittest
 import tank_structure as ts
-from units import inch2meter, psi2pascal
+from units import inch2meter, psi2pascal, lbf2newton
 
 
 class TestStringMethods(unittest.TestCase):
@@ -27,6 +27,16 @@ class TestStringMethods(unittest.TestCase):
         self.assertAlmostEqual(psi2pascal(10.8), ts.cr_ex_press_cylinder(
             a, inch2meter(0.183), l_c, E, v), delta=1e3)
 
+
+    def test_sample_8_4(self):
+        # Do sample problem 8-4 from Huzel and Huang.            
+        a = inch2meter(41.0)
+        l_c = inch2meter(46.9)
+        E = psi2pascal(10.4e6)
+        t_c = inch2meter(0.183)
+
+        self.assertAlmostEqual(lbf2newton(823900), ts.max_axial_load(
+            0, a, t_c, l_c, E), delta=100)
 
 if __name__ == '__main__':
     unittest.main()

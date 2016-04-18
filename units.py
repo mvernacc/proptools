@@ -16,3 +16,9 @@ def psi2pascal(x):
 
 def pascal2psi(x):
 	return x / 6895
+
+def lbf2newton(x):
+	return x * 4.448
+
+def newton2lbf(x):
+	return x / 4.448
