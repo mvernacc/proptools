@@ -139,7 +139,7 @@ def sphere_mass(a, t, rho):
     return 4 * pi * a**2 * t * rho
 
 
-def ellipse_mass(a, t, rho):
+def ellipse_mass(a, b, t, rho):
     ''' Mass of a ellipsoidal tank.
 
     Arguments:
@@ -151,7 +151,7 @@ def ellipse_mass(a, t, rho):
     Returns:
         mass of ellipsoidal tank [kilogram].
     '''
-    k = a / b 
+    k = a / b
     return pi * a**2 * t * rho * ellipse_design_factor(k) / k
 
 

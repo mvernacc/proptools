@@ -22,3 +22,9 @@ def lbf2newton(x):
 
 def newton2lbf(x):
     return x / 4.448
+
+def lbm2kilogram(x):
+    return x * 0.4536
+
+def kilogram2lbm(x):
+    return x / 0.4536

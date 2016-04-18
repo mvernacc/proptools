@@ -1,6 +1,6 @@
 import unittest
 import tank_structure as ts
-from units import inch2meter, psi2pascal, lbf2newton
+from units import inch2meter, psi2pascal, lbf2newton, lbm2kilogram
 
 
 class TestStringMethods(unittest.TestCase):
@@ -16,6 +16,7 @@ class TestStringMethods(unittest.TestCase):
         weld_eff = 1.0
         p_to = psi2pascal(180) # Oxidizer max pressure 180 psi
         p_tf = psi2pascal(170) # fuel max pressure 170 psi
+        rho = 0.101 * lbm2kilogram(1) / inch2meter(1)**3
 
         # knuckle factor K = 0.80
         self.assertAlmostEqual(0.8, ts.knuckle_factor(a / b), delta=0.02)
@@ -31,6 +32,17 @@ class TestStringMethods(unittest.TestCase):
         # Fuel tank cylinder 0.183 inch thick.
         self.assertAlmostEqual(inch2meter(0.183), ts.cylinder_thickness(
             p_tf, a, stress, weld_eff), delta=inch2meter(0.005))
+
+        # Ellipse design factor E' = 4.56
+        self.assertAlmostEqual(4.56, ts.ellipse_design_factor(a / b), delta = 0.005)
+
+        # Oxidizer tank end weighs 126.4 lmb
+        self.assertAlmostEqual(2 * lbm2kilogram(126.4), ts.ellipse_mass(
+            a, b, inch2meter(0.145), rho), delta=lbm2kilogram(0.2))
+
+        # Cylindrical section weighs 223.3 lbm
+        self.assertAlmostEqual(lbm2kilogram(223.3), ts.cylinder_mass(
+            a, inch2meter(0.183), l_c, rho), delta=lbm2kilogram(0.2))
 
         # Critical external loading for fuel tank cylinder 10.8 psi
         self.assertAlmostEqual(psi2pascal(10.8), ts.cr_ex_press_cylinder(
