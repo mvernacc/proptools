@@ -193,3 +193,27 @@ def cr_ex_press_cylinder(a, t_c, l_c, E, v):
         # Long tank.
         return E * t_c**3 / (4 * (1 - v**2) * a**3)
 
+
+def sphere_volume(a):
+    '''Volume enclosed by a spherical tank.
+
+    Arguments:
+        a: Tank radius [units: meter].
+
+    Returns:
+        tank volume [units: meter**3].
+    '''
+    return 4.0 / 3 * pi * a**3
+
+
+def cylinder_volume(a, l_c):
+    '''Volume enclosed by a cylindrical tank section.
+
+    Arguments:
+        a: Tank radius [units: meter].
+        l_c: Cylinder length [units: meter].
+
+    Returns:
+        tank volume [units: meter**3].
+    '''
+    return pi * a**2 * l_c
