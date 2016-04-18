@@ -203,7 +203,7 @@ def cr_ex_press_ellipse_end(a, b, t, E, C_b=0.05):
     Returns:
         Critical external pressure for buckling [units: pascal].
     '''
-    return C_b * 2 * E * t**2 / b**2
+    return C_b * 2 * E * t**2 / (a / b * a)**2
 
 
 def cr_ex_press_cylinder(a, t_c, l_c, E, v):

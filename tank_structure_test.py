@@ -44,6 +44,10 @@ class TestStringMethods(unittest.TestCase):
         self.assertAlmostEqual(lbm2kilogram(223.3), ts.cylinder_mass(
             a, inch2meter(0.183), l_c, rho), delta=lbm2kilogram(0.2))
 
+        # Critical external pressure for ox tank ends = 13.4 psi.
+        self.assertAlmostEqual(psi2pascal(13.4), ts.cr_ex_press_ellipse_end(
+            a, b, inch2meter(0.145), E, C_b=0.10), delta=1e3)
+
         # Critical external loading for fuel tank cylinder 10.8 psi
         self.assertAlmostEqual(psi2pascal(10.8), ts.cr_ex_press_cylinder(
             a, inch2meter(0.183), l_c, E, v), delta=1e3)
