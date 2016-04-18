@@ -9,6 +9,7 @@ class TestStringMethods(unittest.TestCase):
         # Do sample problem 8-3 from Huzel and Huang.
         stress = psi2pascal(38e3)
         a = inch2meter(41.0)
+        b = inch2meter(29.4)
         l_c = inch2meter(46.9)
         E = psi2pascal(10.4e6)
         v = 0.36
@@ -16,9 +17,17 @@ class TestStringMethods(unittest.TestCase):
         p_to = psi2pascal(180) # Oxidizer max pressure 180 psi
         p_tf = psi2pascal(170) # fuel max pressure 170 psi
 
+        # knuckle factor K = 0.80
+        self.assertAlmostEqual(0.8, ts.knuckle_factor(a / b), delta=0.02)
+
+        # Ox tank knuckle 0.155 inch thick.
+        self.assertAlmostEqual(inch2meter(0.155), ts.knuckle_thickness(
+            p_to, a, b, stress, weld_eff), delta=inch2meter(0.005))
+
         # Ox tank crown 0.135 inch thick.
         self.assertAlmostEqual(inch2meter(0.135), ts.crown_thickness(
-            p_to, 1.395*a, stress, weld_eff), delta=inch2meter(0.005))
+            p_to, (a / b) * a, stress, weld_eff), delta=inch2meter(0.005))
+        
         # Fuel tank cylinder 0.183 inch thick.
         self.assertAlmostEqual(inch2meter(0.183), ts.cylinder_thickness(
             p_tf, a, stress, weld_eff), delta=inch2meter(0.005))
