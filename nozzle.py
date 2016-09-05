@@ -147,6 +147,21 @@ def mach_from_er(er, gamma):
     return Me
 
 
+def is_choked(p_c, p_e, gamma):
+    ''' Determine whether the nozzle flow is choked.
+
+    See https://en.wikipedia.org/wiki/Choked_flow#Choking_in_change_of_cross_section_flow
+
+    Arguments:
+        p_c: Nozzle stagnation chamber pressure [units: pascal].
+        p_e: Nozzle exit static pressure [units: pascal].
+        gamma: Exhaust gas ratio of specific heats [units: none].
+
+    Returns:
+        True if flow is choked, false otherwise.
+    '''
+    return p_e/p_c < (2 / (gamma + 1))**(gamma / (gamma - 1))
+
 def main():
     # Do sample problem 1-3 from Huzel and Huang.
     # Inputs
@@ -177,6 +192,9 @@ def main():
     M = mach_from_er(er, gamma)
     print 'M  = {0:.3f}, should be {1:.1f}'.format(M, M_hh)
     assert(abs(M - M_hh) < 0.1)
+
+    # Test choked flow
+    assert(is_choked(p_c, p_e, gamma))
 
 
 
