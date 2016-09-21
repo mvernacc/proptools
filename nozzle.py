@@ -147,6 +147,20 @@ def mach_from_er(er, gamma):
     return Me
 
 
+def mach_from_pr(p_c, p_e, gamma):
+    ''' Find the exit Mach number from the pressure ratio.
+
+    Arugments:
+        p_c: Nozzle stagnation chamber pressure [units: pascal].
+        p_e: Nozzle exit static pressure [units: pascal].
+        gamma: Exhaust gas ratio of specific heats [units: none].
+
+    Returns:
+        scalar: Exit Mach number [units: none].
+    '''
+    return (2 / (gamma - 1) * ((p_e / p_c)**((1 - gamma) / gamma) -1))**0.5
+
+
 def is_choked(p_c, p_e, gamma):
     ''' Determine whether the nozzle flow is choked.
 
@@ -192,6 +206,17 @@ def main():
     M = mach_from_er(er, gamma)
     print 'M  = {0:.3f}, should be {1:.1f}'.format(M, M_hh)
     assert(abs(M - M_hh) < 0.1)
+
+    # Test mach_from_pr against RPE figure 3-1.
+    M = mach_from_pr(1, 1, 1.3)
+    M_RPE = 0.
+    assert(abs(M - M_RPE) < 0.05)
+    M = mach_from_pr(1, 0.8, 1.3)
+    M_RPE = 0.6
+    assert(abs(M - M_RPE) < 0.05)
+    M = mach_from_pr(1, 0.1, 1.3)
+    M_RPE = 2.2
+    assert(abs(M - M_RPE) < 0.05)
 
     # Test choked flow
     assert(is_choked(p_c, p_e, gamma))
