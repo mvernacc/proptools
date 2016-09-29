@@ -5,6 +5,7 @@ proptools
 2016 Apr 3
 '''
 import numpy as np
+from scipy.optimize import fsolve
 
 # Warning logging.
 import logging
@@ -176,6 +177,47 @@ def is_choked(p_c, p_e, gamma):
     '''
     return p_e/p_c < (2 / (gamma + 1))**(gamma / (gamma - 1))
 
+
+def mach_from_area_subsonic(Ar, gamma):
+    ''' Find the Mach number as a function of area ratio for subsonic
+    flow.
+
+    Arguments:
+        Ar (scalar): Area / throat area [units: none].
+        gamma (scalar): Ratio of specific heats [units: none].
+
+    Returns:
+        scalar: Mach number of the flow in a passage with area Ar * (throat area).
+    '''
+    # See https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
+    P = 2 / (gamma + 1)
+    Q = 1 - P
+    E = 1 / Q
+    R = Ar**2
+    a = P**(1 / Q)
+    r = (R - 1) / (2 * a)
+    X_init = 1 / ((1 + r) + (r * (r + 2))**0.5)
+    X = fsolve(
+        lambda X: (P + Q * X)**E - R * X,
+        X_init
+        )
+    return X[0]**0.5
+
+
+def area_from_mach(M, gamma):
+    ''' Find the area ratio for a given Mach number.
+
+    Argument:
+        M (scalar): Mach number.
+        gamma (scalar): Ratio of specific heats [units: none].
+
+    Returns:
+        scalar: Area ratio (A / throat area).
+    '''
+    return 1 / M * (2 / (gamma + 1) * (1 + (gamma - 1) / 2 * M**2)) \
+        **((gamma + 1) / (2 * (gamma - 1)))
+
+
 def main():
     # Do sample problem 1-3 from Huzel and Huang.
     # Inputs
@@ -221,6 +263,12 @@ def main():
     # Test choked flow
     assert(is_choked(p_c, p_e, gamma))
 
+    # Test Mach number / area ratio
+    for gamma in np.linspace(1.1, 1.6, 10):
+        assert(np.isclose(area_from_mach(1, gamma), 1))
+        for Ar in np.linspace(1.1, 10, 10):
+            M = mach_from_area_subsonic(Ar, gamma)
+            assert np.isclose(area_from_mach(M, gamma), Ar)
 
 
 if __name__ == '__main__':
