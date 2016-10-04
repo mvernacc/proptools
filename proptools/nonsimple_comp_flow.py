@@ -65,8 +65,7 @@ def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
     dA_dx = derivative(f_A, x, dx=1e-6)
 
     # Use Equation 4 from Bandyopadhyay to find dT_o/dx.
-    # dT_o_dx = f_q(x) * np.pi * D / (mdot * c_p)
-    dT_o_dx = 0
+    dT_o_dx = f_q(x) * np.pi * D / (mdot * c_p)
 
     # Use Equation 3 from Bandyopadhyay to find dM/dx.
     # Note: There is an error in Bandyopadhyay's equation. The area
@@ -78,7 +77,7 @@ def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
     dM_dx = M * (1 + (gamma - 1) / 2 * M**2) / (1 - M**2) \
         * ( \
             gamma * M**2 * 2 * f_f(x) / D \
-            # + (1 + gamma * M**2) / (2 * T_o) * dT_o_dx \
+            + (1 + gamma * M**2) / (2 * T_o) * dT_o_dx \
              - dA_dx / A
             )
     return [dT_o_dx, dM_dx]
@@ -200,6 +199,35 @@ def main():
     plt.axhline(y=1, color='black')
     plt.legend()
     plt.suptitle('Demonstration of Fanno Flow')
+
+    # Rayleigh Flow demo
+    plt.figure()
+    q = 1e5
+    def f_f(x):
+        return 0
+    def f_q(x):
+        return q
+    def f_A(x):
+        return 1
+
+    for M_in in [0.2, 0.8, 1.2, 2]:
+        x = np.linspace(0, 100)
+
+        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+
+        plt.subplot(2,1,1)
+        plt.plot(x, T_o)
+        plt.xlabel('x [m]')
+        plt.ylabel('T_o [K]')
+
+        plt.subplot(2,1,2)
+        plt.plot(x, M, label='Non-simple solution $M_{{in}}$={:.1f}'.format(M_in),
+            marker='+')
+        plt.xlabel('x [m]')
+        plt.ylabel('M [-]')
+    plt.axhline(y=1, color='black')
+    plt.legend()
+    plt.suptitle('Demonstration of Rayleigh Flow')
     plt.show()
 
 
