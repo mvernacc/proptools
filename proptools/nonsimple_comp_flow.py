@@ -30,6 +30,9 @@ from proptools import nozzle
 def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
     ''' Differential equation for Mach number in non-simple duct flow.
 
+    Note: This method will not be accurate (and may divide by zero) for flows which
+    contain a region at Mach 1, e.g. a choked convergent-divergent nozzle.
+
     Arguments:
         state (2-vector): Stagnation temperature [units: kelvin],
             Mach number [units: none].
