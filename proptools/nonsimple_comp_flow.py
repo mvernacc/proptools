@@ -24,13 +24,13 @@ proptools
 '''
 
 from scipy.misc import derivative
-from scipy.integrate import odeint
+from scipy.integrate import ode
 import numpy as np
 
 from proptools import nozzle
 
 
-def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
+def differential(x, state, mdot, c_p, gamma, f_f, f_q, f_A):
     ''' Differential equation for Mach number in non-simple duct flow.
 
     Note: This method will not be accurate (and may divide by zero) for flows which
@@ -106,11 +106,26 @@ def solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A):
     Returns:
         T_o (array of length len(x)): The stagnation temperature at each station in x [units: none].
         M (array of length len(x)): The Mach number at each station in x [units: none].
+        choked (boolean): True if the flow chokes at M=1 in the duct. M and T_o for x past the
+            choke point will be nan. Choking can cause shocks or upstream effects which this model
+            does not capture; therefore results for choked scenarios may not be accurate.
     '''
-    y = odeint(differential, [T_o_in, M_in], x, args=(mdot, c_p, gamma, f_f, f_q, f_A))
-    T_o = y[:,0]
-    M = y[:,1]
-    return (T_o, M)
+    T_o = np.full(len(x), np.nan)
+    M = np.full(len(x), np.nan)
+    solver = ode(differential).set_f_params(mdot, c_p, gamma, f_f, f_q, f_A)
+    solver.set_initial_value([T_o_in, M_in], 0)
+    T_o[0] = T_o_in
+    M[0] = M_in
+    i = 1
+    while solver.successful() and i < len(x):
+        y = solver.integrate(x[i])
+        T_o[i] = y[0]
+        M[i] = y[1]
+        i += 1
+    choked = False
+    if not solver.successful() and abs(solver.y[1] - 1) < 1e-3:
+        choked = True
+    return (T_o, M, choked)
 
 
 def main():
@@ -143,7 +158,7 @@ def main():
         else:
             M_area = [nozzle.mach_from_er(f_A(xi) / A_t, gamma) for xi in x]
 
-        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+        T_o, M, choked = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
 
         plt.subplot(2,1,1)
         plt.plot(x, T_o)
@@ -177,14 +192,14 @@ def main():
         # Anderson Modern Compressible Flow Equation 3.107
         L = D / (4 * f) * ((1 - M_in**2) / (gamma * M_in**2) + (gamma + 1) / (2 * gamma) \
             * np.log((gamma + 1) * M_in**2 / (2 + (gamma - 1) * M_in**2)))
-        x = np.linspace(0, L * 0.999)
+        x = np.linspace(0, L)
         T_in = T_o_in * (1 + (gamma - 1) / 2 * M_in**2)**-1
         v_in = M_in * (gamma * R * T_in)**0.5
         rho_in = mdot / (v_in * f_A(0))
         p_in = rho_in * R * T_in
         p_o_in = p_in * (T_o_in / T_in)**(gamma / (gamma -1))
 
-        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+        T_o, M, choked = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
 
         plt.subplot(2,1,1)
         plt.plot(x, T_o)
@@ -192,7 +207,7 @@ def main():
         plt.ylabel('T_o [K]')
 
         plt.subplot(2,1,2)
-        plt.plot(x, M, label='Non-simple solution $M_{{in}}$={:.1f}'.format(M_in),
+        plt.plot(x, M, label='$M_{{in}}$={:.1f}, {:s}'.format(M_in, 'choked' if choked else 'not choked'),
             marker='+')
         plt.xlabel('x [m]')
         plt.ylabel('M [-]')
@@ -213,7 +228,7 @@ def main():
     for M_in in [0.2, 0.8, 1.2, 2]:
         x = np.linspace(0, 100)
 
-        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+        T_o, M, choked = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
 
         plt.subplot(2,1,1)
         plt.plot(x, T_o)
@@ -221,7 +236,7 @@ def main():
         plt.ylabel('T_o [K]')
 
         plt.subplot(2,1,2)
-        plt.plot(x, M, label='Non-simple solution $M_{{in}}$={:.1f}'.format(M_in),
+        plt.plot(x, M, label='$M_{{in}}$={:.1f}, {:s}'.format(M_in, 'choked' if choked else 'not choked'),
             marker='+')
         plt.xlabel('x [m]')
         plt.ylabel('M [-]')
