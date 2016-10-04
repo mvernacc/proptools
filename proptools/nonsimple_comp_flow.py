@@ -15,6 +15,9 @@ References:
         Thermal Fluid Analysis Workshop, Cleveland, OH, 2007.
         Online: https://tfaws.nasa.gov/TFAWS07/Proceedings/TFAWS07-1016.pdf
 
+    [3] J. D. Anderson, Modern Compressible Flow with Historical Perspective, 2nd ed.
+        New York, NY: McGraw-Hill, 1990.
+
 Matt Vernacchia
 proptools
 2016 Oct 3
@@ -57,7 +60,7 @@ def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
     # Duct area
     A = f_A(x)
     # Duct diameter
-    D = (A / np.pi)**2
+    D = (A / np.pi)**0.5
     # Duct area derivative
     dA_dx = derivative(f_A, x, dx=1e-6)
 
@@ -69,11 +72,13 @@ def differential(state, x, mdot, c_p, gamma, f_f, f_q, f_A):
     # Note: There is an error in Bandyopadhyay's equation. The area
     # term should not be multiplied by gamma * M**2. Pekker's equation 10
     # shows the correct area term; but lacks a friction term.
+    # Note: Compared to Anderson's Eqn 3.96, Bandyopadhyay's equation
+    # is missing a factor of 2 on the friction term. I use Anderson's
+    # friction term here.
     dM_dx = M * (1 + (gamma - 1) / 2 * M**2) / (1 - M**2) \
         * ( \
-            # gamma * M**2 * f_f(x) / D \
+            gamma * M**2 * 2 * f_f(x) / D \
             # + (1 + gamma * M**2) / (2 * T_o) * dT_o_dx \
-            # - gamma * M**2 / A * dA_dx
              - dA_dx / A
             )
     return [dT_o_dx, dM_dx]
@@ -155,6 +160,46 @@ def main():
         plt.ylabel('M [-]')
     plt.legend()
     plt.suptitle('Demonstration with linear area variation, no heat addition, no friction')
+
+    # Fanno Flow demo
+    plt.figure()
+    f = 0.005
+    def f_f(x):
+        return f
+    def f_q(x):
+        return 0
+    def f_A(x):
+        return 1
+
+    for M_in in [0.2, 0.8, 1.2, 2]:
+        # Duct diameter
+        D = (f_A(0) / np.pi)**0.5
+        # Choking length
+        # Anderson Modern Compressible Flow Equation 3.107
+        L = D / (4 * f) * ((1 - M_in**2) / (gamma * M_in**2) + (gamma + 1) / (2 * gamma) \
+            * np.log((gamma + 1) * M_in**2 / (2 + (gamma - 1) * M_in**2)))
+        x = np.linspace(0, L * 0.999)
+        T_in = T_o_in * (1 + (gamma - 1) / 2 * M_in**2)**-1
+        v_in = M_in * (gamma * R * T_in)**0.5
+        rho_in = mdot / (v_in * f_A(0))
+        p_in = rho_in * R * T_in
+        p_o_in = p_in * (T_o_in / T_in)**(gamma / (gamma -1))
+
+        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+
+        plt.subplot(2,1,1)
+        plt.plot(x, T_o)
+        plt.xlabel('x [m]')
+        plt.ylabel('T_o [K]')
+
+        plt.subplot(2,1,2)
+        plt.plot(x, M, label='Non-simple solution $M_{{in}}$={:.1f}'.format(M_in),
+            marker='+')
+        plt.xlabel('x [m]')
+        plt.ylabel('M [-]')
+    plt.axhline(y=1, color='black')
+    plt.legend()
+    plt.suptitle('Demonstration of Fanno Flow')
     plt.show()
 
 
