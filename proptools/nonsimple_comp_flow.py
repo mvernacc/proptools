@@ -118,36 +118,40 @@ def main():
     c_p = 2000
     gamma = 1.4
     R = c_p * (1 - 1 / gamma)
-    M_in = 0.2
-    T_o_in = 300
-    T_in = T_o_in * (1 + (gamma - 1) / 2 * M_in**2)**-1
-    v_in = M_in * (gamma * R * T_in)**0.5
-    rho_in = mdot / (v_in * f_A(0))
-    p_in = rho_in * R * T_in
-    p_o_in = p_in * (T_o_in / T_in)**(gamma / (gamma -1))
     x = np.linspace(0, 1)
+    T_o_in = 300
 
-    A_t = nozzle.throat_area(mdot, p_o_in, T_o_in, gamma, nozzle.R_univ / R)
+    for M_in in [0.2, 0.8, 1.2, 2]:
+        T_in = T_o_in * (1 + (gamma - 1) / 2 * M_in**2)**-1
+        v_in = M_in * (gamma * R * T_in)**0.5
+        rho_in = mdot / (v_in * f_A(0))
+        p_in = rho_in * R * T_in
+        p_o_in = p_in * (T_o_in / T_in)**(gamma / (gamma -1))
+        
 
-    if M_in < 1:
-        M_area = [nozzle.mach_from_area_subsonic(f_A(xi) / A_t, gamma) for xi in x]
-    else:
-        M_area = [nozzle.mach_from_er(f_A(xi) / A_t, gamma) for xi in x]
+        A_t = nozzle.throat_area(mdot, p_o_in, T_o_in, gamma, nozzle.R_univ / R)
 
-    T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
+        if M_in < 1:
+            M_area = [nozzle.mach_from_area_subsonic(f_A(xi) / A_t, gamma) for xi in x]
+        else:
+            M_area = [nozzle.mach_from_er(f_A(xi) / A_t, gamma) for xi in x]
 
-    plt.subplot(2,1,1)
-    plt.plot(x, T_o)
-    plt.xlabel('x [m]')
-    plt.ylabel('T_o [K]')
+        T_o, M = solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A)
 
-    plt.subplot(2,1,2)
-    plt.plot(x, M_area, color='blue', label='Simple area solution', marker='x')
-    plt.plot(x, M, color='red', label='Non-simple solution', marker='+')
-    plt.xlabel('x [m]')
-    plt.ylabel('M [-]')
+        plt.subplot(2,1,1)
+        plt.plot(x, T_o)
+        plt.xlabel('x [m]')
+        plt.ylabel('T_o [K]')
+
+        plt.subplot(2,1,2)
+        plt.plot(x, M_area, label='Simple area solution $M_{{in}}$={:.1f}'.format(M_in),
+            marker='x')
+        plt.plot(x, M, label='Non-simple solution $M_{{in}}$={:.1f}'.format(M_in),
+            marker='+')
+        plt.xlabel('x [m]')
+        plt.ylabel('M [-]')
     plt.legend()
-
+    plt.suptitle('Demonstration with linear area variation, no heat addition, no friction')
     plt.show()
 
 
