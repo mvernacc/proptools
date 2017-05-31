@@ -5,7 +5,7 @@ Rocket propulsion design calculation tools.
 ## Overview
 
 This project provides python implementations of equations used in the preliminary design of rocket propulsion systems.
-Most of the equations are taken from from *Modern Engineering for Design of Liquid-Propellant Rocket Engines* by Dieter Huzel and David Huang.
+Most of the equations are taken from from [*Modern Engineering for Design of Liquid-Propellant Rocket Engines*](https://arc.aiaa.org/doi/book/10.2514/4.866197) by Dieter Huzel and David Huang or [*Rocket Propulsion Elements*](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118753658.html) by George Sutton and Oscar Biblarz.
 
 
 ## Author
