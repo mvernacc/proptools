@@ -25,6 +25,7 @@ Proptools can also be used as a library in other propulsion design and analysis 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   modules
 
 
 
