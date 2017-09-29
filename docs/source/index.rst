@@ -23,9 +23,10 @@ Proptools can be used as a desktop calculator:
 Proptools can also be used as a library in other propulsion design and analysis software. It is distributed under a `MIT License <https://github.com/mvernacc/proptools/blob/master/LICENSE>`_ and can be used in commercial projects.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-   modules
+  :maxdepth: 2
+
+  nozzle
+  modules
 
 
 
