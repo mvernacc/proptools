@@ -46,7 +46,7 @@ setup(
     keywords='rocket propulsion engineering aerospace',
 
 
-    install_requires=['numpy'],
+    install_requires=['numpy', 'sphinx_rtd_theme'],
 
     packages=find_packages(),
 
