@@ -1,11 +1,22 @@
 Nozzle Flow
 ***********
 
-The purpose of a rocket is to generate thrust by expelling mass at high velocity. A nozzle is a flow device which accelerates gas to high velocity before it is expelled from the vehicle. The nozzle accelerates the gas by converting some of the gas's thermal energy into kinetic energy.
+Nozzle flow theory can predict the thrust and specific impulse of a rocket engine. The following example predicts the performance of an engine which operates at chamber pressure of 10 MPa, chamber temperature of 3000 K, and has 100 mm diameter nozzle throat.
+
+.. literalinclude:: examples/thrust_isp.py 
+
+Output:
+
+.. literalinclude:: examples/thrust_isp_output.txt
+
+The rest of this page derives the nozzle flow theory, and demonstrates other features of ``proptools.nozzle``.
 
 
 Ideal Nozzle Flow
 =================
+
+The purpose of a rocket is to generate thrust by expelling mass at high velocity. The rocket nozzle is a flow device which accelerates gas to high velocity before it is expelled from the vehicle. The nozzle accelerates the gas by converting some of the gas's thermal energy into kinetic energy.
+
 Ideal nozzle flow is a simplified model of the aero- and thermo-dynamic behavior of fluid in a nozzle. The ideal model allows us to write algebraic relations between an engine's geometry and operating conditions (e.g. throat area, chamber pressure, chamber temperature) and its performance (e.g. thrust and specific impulse). These equations are fundamental tools for the preliminary design of rocket propulsion systems.
 
 
