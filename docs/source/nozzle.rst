@@ -86,11 +86,18 @@ Set state 1 to be the conditions in the combustion chamber: :math:`T_1 = T_c, p_
 
   \require{siunitx}
 
-where :math:`\mathcal{R} = 8.314` J mol :sup:`-1` K :sup:`-1` is the universal gas constant and :math:`\mathcal{M}` is the molar mass of the exhaust gas.
+where :math:`\mathcal{R} = 8.314` J mol :sup:`-1` K :sup:`-1` is the universal gas constant and :math:`\mathcal{M}` is the molar mass of the exhaust gas. Temperature and molar mass have the most significant effect on exit velocity. To maximize exit velocity, a rocket should burn propellants which yield a high flame temperature and low molar mass exhaust. This is why many rockets burn hydrogen and oxygen: they yield a high flame temperature, and the exhaust (mostly H\ :sub:`2` and H\ :sub:`2`\ O) is of low molar mass.
 
+The pressure ratio :math:`p_e / p_c` is usually quite small. As the pressure ratio goes to zero, the exit vleocity approaches its maximum for a given :math:`T_c, \mathcal{M}` and :math:`\gamma`.
 
+.. math::
+  \frac{p_e}{p_c} \rightarrow 0 \quad \Rightarrow \quad 1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \rightarrow 1
 
-TODO velocity from energy conservation
+If :math:`p_e \ll p_c`, the pressures have a weak effect on exit velocity. 
+
+The heat capacity ratio :math:`\gamma` has a weak effect on exit velocity. Decreasing :math:`\gamma` increases exit velocity.
+
+TODO code example
 
 
 Mach-area Relation
