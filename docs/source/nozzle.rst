@@ -254,6 +254,22 @@ We can also easily solve the inverse problem with `scipy.optimize.fsolve <https:
 
 .. literalinclude:: examples/expansion_ratio_inverse_output.txt
 
+Let us plot the effect of expansion ratio on thrust coefficient:
+
+.. plot:: examples/plots/exp_ratio_cf.py
+  :include-source:
+  :align: center
+
+The thrust coefficient is maximized at the *matched expansion condition*, where :math:`p_e = p_a`. Therefore, nozzle designers select the expansion ratio based on the ambient pressure which the engine is expected to operate in. Small expansion ratios are used for space launch boosters or tactical missiles, which operate at low altitudes (high ambient pressure). Large expansion ratios are used for second stage or orbital maneuvering engines, which operate in the vacuum of space.
+
+.. figure:: figures/sea_level_vs_vacuum_engine.png
+  :align: center
+  :width: 300px
+
+  This illustration shows two variants of an engine family, one designed for a first stage booster (left) and the other for a second stage (right). The first stage (e.g. sea level) engine has a smaller expansion ratio than the second stage (e.g. vacuum) engine. Image credit: `shadowmage <https://forum.kerbalspaceprogram.com/index.php?/profile/138730-shadowmage/>`_.
+
+
+TODO replicate RPE figure 3-10
 
 Characteristic velocity
 =======================
