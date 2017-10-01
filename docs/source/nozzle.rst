@@ -298,8 +298,22 @@ The ideal :math:`c^*` of the example engine is:
 
 Specific Impulse
 ================
-TODO
 
+Finally, we arrive at *specific impulse*, the most important performance parameter of a rocket engine. The specific impulse is the ratio of thrust to the rate of propellant consumption:
+
+.. math::
+
+  I_{sp} \equiv \frac{F}{\dot{m} g_0}
+
+For historical reasons, specific impulse is normalized by the constant :math:`g_0 =` 9.807 m s :sup:`-2` , and has units of seconds. For an ideal rocket at matched exit pressure, :math:`I_{sp} = v_2 / g_0`.
+
+The specific impulse measures the "fuel efficiency" of a rocket engine. The specific impulse and propellant mass fraction together determine the delta-v capability of a rocket.
+
+Specific impulse is the product of the thrust coefficient and the characteristic velocity. The overall efficiency of the engine (:math:`I_{sp}`) depends on both the combustion gas (:math:`c^*`) and the efficiency of the nozzle expansion process (:math:`C_F`).
+
+.. math::
+
+  I_{sp} = \frac{c^* C_F}{g_0}
 
 
 .. [RPE] G. P. Sutton and O. Biblarz, *Rocket Propulsion Elements*, Hoboken: John Wiley & Sons, 2010.
