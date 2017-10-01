@@ -175,10 +175,47 @@ TODO add mass flow and is_choked code example
 
 Thrust
 ======
-TODO
+
+The thrust force of a rocket engine is equal to the momentum flow out of the nozzle plus a pressure force at the nozzle exit:
+
+.. math::
+
+  F = \dot{m} v_e + (p_e - p_a) A_e
+
+where :math:`p_a` is the ambient pressure and :math:`A_e` is the nozzle exit area. We can rewrite this in terms of the chamber pressure:
+
+.. math::
+
+  F = A_t p_c \sqrt{\frac{2 \gamma^2}{\gamma - 1} \left( \frac{2}{\gamma + 1}\right)^{\frac{\gamma + 1}{\gamma - 1}} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)} + (p_e - p_a) A_e
+
+Note that thrust depends only on :math:`\gamma` and the nozzle pressures and areas; not chamber temperature.
+
+Use ``proptools`` to plot thrust versus chamber pressure for the example engine:
+
+TODO create a thrust function instead of using C_f
+
+.. plot:: examples/plots/thrust_pc.py
+  :include-source:
+  :align: center
+
+Note that thrust is almost linear in chamber pressure.
+
+We can also explore the variation of thrust with ambient pressure for fixed :math:`p_c, p_e`:
+
+TODO add altitude dual axis
+
+.. plot:: examples/plots/thrust_pa.py
+  :include-source:
+  :align: center
+
 
 Thrust coefficient
 ==================
+TODO
+
+Expansion Ratio
+===============
+
 TODO
 
 Characteristic velocity
