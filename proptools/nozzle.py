@@ -1,84 +1,72 @@
-''' Nozzle flow calculations.
+"""Nozzle flow calculations."""
 
-Matt Vernacchia
-proptools
-2016 Apr 3
-'''
 import numpy as np
 from scipy.optimize import fsolve
+import warnings
 
-# Warning logging.
-import logging
-formatter = logging.Formatter('%(levelname)s {%(pathname)s:%(lineno)d}: %(message)s')
-ch = logging.StreamHandler()
-ch.setFormatter(formatter)
-logger = logging.getLogger('simple_example')
-logger.addHandler(ch)
-
-import constants
+import proptools.constants
 
 R_univ = constants.R_univ
-g = constants.g
+g = constants.g    # pylint: disable=invalid-name
 
 def thrust_coef(p_c, p_e, gamma, p_a=None, er=None):
-    '''Nozzle thrust coefficient, C_f.
+    """Nozzle thrust coefficient, :math:`C_F`.
 
     Equation 1-33a in Huzel and Huang.
 
     Arguments:
-        p_c: Nozzle stagnation chamber pressure [units: pascal].
-        p_e: Nozzle exit static pressure [units: pascal].
-        gamma: Exhaust gas ratio of specific heats [units: none].
-        p_a (optional): Ambient pressure [units: pascal]. If None,
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit static pressure [units: pascal].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+        p_a (scalar, optional): Ambient pressure [units: pascal]. If None,
             then p_a = p_e.
-        er (optional): Ambient pressure [units: pascal]. If None,
+        er (scalar, optional): Nozzle area expansion ratio [units: dimensionless]. If None,
             then p_a = p_e.
-
 
     Returns:
-        C_f [units: none].
-    '''
+        scalar: C_F [units: dimensionless].
+    """
     if (p_a is None and er is not None) or (er is None and p_a is not None):
         raise ValueError('Both p_a and er must be provided.')
-    C_f = (2 * gamma**2 / (gamma - 1) \
+    C_F = (2 * gamma**2 / (gamma - 1) \
         * (2 / (gamma + 1))**((gamma + 1) / (gamma - 1)) \
         * (1 - (p_e / p_c)**((gamma - 1) / gamma))
         )**0.5
     if p_a is not None and er is not None:
-        C_f += er * (p_e - p_a) / p_c
-    return C_f
+        C_F += er * (p_e - p_a) / p_c
+    return C_F
 
 
 def c_star(gamma, m_molar, T_c):
-    '''Characteristic velocity, c*.
+    """Characteristic velocity, :math:`c^*`.
 
     Equation 1-32a in Huzel and Huang. Note that the g in Huzel is removed here,
     because Huzel uses US units while this function uses SI.
 
     Arguments:
-        gamma: Exhaust gas ratio of specific heats [units: none].
-        m_molar: Exhaust gas mean molar mass [units: kilogram mole**-1].
-        T_c: Nozzle stagnation temperature [units: kelvin].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+        m_molar (scalar): Exhaust gas mean molar mass [units: kilogram mole**-1].
+        T_c (scalar): Nozzle stagnation temperature [units: kelvin].
 
     Returns:
-        c_star [units: meter second**-1].
-    '''
+        scalar: The characteristic velocity [units: meter second**-1].
+    """
     return (gamma * (R_univ / m_molar) * T_c)**0.5 \
         / gamma \
         / (2 / (gamma + 1))**((gamma + 1) / (2 * (gamma - 1)))
 
 
 def er_from_p(p_c, p_e, gamma):
-    ''' Find the nozzle expansion ratio from thechamber and exit pressures.
+    """Find the nozzle expansion ratio from the chamber and exit pressures.
     
     Arguments:
-        p_c: Nozzle stagnation chamber pressure [units: pascal].
-        p_e: Nozzle exit static pressure [units: pascal].
-        gamma: Exhaust gas ratio of specific heats [units: none].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit static pressure [units: pascal].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        Expansion ratio [units: none]
-    '''
+        scalar: Expansion ratio [units: dimensionless]
+    """
     # Rocket Propulsion Elements 7th Ed, Equation 3-25
     AtAe = ((gamma + 1) / 2)**(1 / (gamma - 1)) \
         * (p_e / p_c)**(1 / gamma) \
@@ -88,17 +76,18 @@ def er_from_p(p_c, p_e, gamma):
 
 
 def throat_area(m_dot, p_c, T_c, gamma, m_molar):
-    ''' Find the nozzle throat area.
+    """Find the nozzle throat area.
 
     Arguments:
-        p_c: Nozzle stagnation chamber pressure [units: pascal].
-        T_c: Nozzle stagnation temperature [units: kelvin].
-        gamma: Exhaust gas ratio of specific heats [units: none].
-        m_molar: Exhaust gas mean molar mass [units: kilogram mole**-1].
+        m_dot (scalar): Propellant mass flow rate [units: kilogram second**-1].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        T_c (scalar): Nozzle stagnation temperature [units: kelvin].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+        m_molar (scalar): Exhaust gas mean molar mass [units: kilogram mole**-1].
 
     Returns:
-        Throat area [units: meter**2].
-    '''
+        scalar: Throat area [units: meter**2].
+    """
     R = R_univ / m_molar
     # Find the Throat Area require for the specified mass flow, using
     # Eocket Propulsion Equations  7th Ed, Equation 3-24
@@ -109,20 +98,19 @@ def throat_area(m_dot, p_c, T_c, gamma, m_molar):
 
 
 def mach_from_er(er, gamma):
-    '''
-    Find the exit Mach number from the area expansion ratio.
+    """Find the exit Mach number from the area expansion ratio.
     
     Explicit Inversion of Stodola's Area-Mach Equation
     Source: J. Majdalani and B. A. Maickie
     http://maji.utsi.edu/publications/pdf/HT02_11.pdf
 
     Arguments:
-        er: Diverging nozzle area expansion ratio, A_e / A_t [units: none].
-        gamma: Exhaust gas ratio of specific heats [units: none].
+        er (scalar): Nozzle area expansion ratio, A_e / A_t [units: dimensionless].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        The exit Mach number [units: none].
-    '''    
+        scalar: The exit Mach number [units: dimensionless].
+    """    
     n = 5 # order of the aproximation
     X = np.zeros((n,))
     M = np.zeros((n,))
@@ -143,57 +131,56 @@ def mach_from_er(er, gamma):
             + 2*M[i-1]**(2/B)*u**2*(2-B) )**0.5 )
         M[i] = M[i-1] + X[i]
     if abs( np.imag( M[n-1] ) ) > 1e-5:
-        logger.warning('Exit Mach Number has nonzero imaginary part!')
+        warnings.warn('Exit Mach Number has nonzero imaginary part!')
     Me = float(np.real(M[n-1]))
     return Me
 
 
 def mach_from_pr(p_c, p_e, gamma):
-    ''' Find the exit Mach number from the pressure ratio.
+    """Find the exit Mach number from the pressure ratio.
 
     Arugments:
-        p_c: Nozzle stagnation chamber pressure [units: pascal].
-        p_e: Nozzle exit static pressure [units: pascal].
-        gamma: Exhaust gas ratio of specific heats [units: none].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit static pressure [units: pascal].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        scalar: Exit Mach number [units: none].
-    '''
+        scalar: Exit Mach number [units: dimensionless].
+    """
     return (2 / (gamma - 1) * ((p_e / p_c)**((1 - gamma) / gamma) -1))**0.5
 
 
 def is_choked(p_c, p_e, gamma):
-    ''' Determine whether the nozzle flow is choked.
+    """Determine whether the nozzle flow is choked.
 
     See https://en.wikipedia.org/wiki/Choked_flow#Choking_in_change_of_cross_section_flow
 
     Arguments:
-        p_c: Nozzle stagnation chamber pressure [units: pascal].
-        p_e: Nozzle exit static pressure [units: pascal].
-        gamma: Exhaust gas ratio of specific heats [units: none].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit static pressure [units: pascal].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        True if flow is choked, false otherwise.
-    '''
+        bool: True if flow is choked, false otherwise.
+    """
     return p_e/p_c < (2 / (gamma + 1))**(gamma / (gamma - 1))
 
 
-def mach_from_area_subsonic(Ar, gamma):
-    ''' Find the Mach number as a function of area ratio for subsonic
-    flow.
+def mach_from_area_subsonic(area_ratio, gamma):
+    """Find the Mach number as a function of area ratio for subsonic flow.
 
     Arguments:
-        Ar (scalar): Area / throat area [units: none].
-        gamma (scalar): Ratio of specific heats [units: none].
+        area_ratio (scalar): Area / throat area [units: dimensionless].
+        gamma (scalar): Ratio of specific heats [units: dimensionless].
 
     Returns:
-        scalar: Mach number of the flow in a passage with area Ar * (throat area).
-    '''
+        scalar: Mach number of the flow in a passage with ``area = area_ratio * (throat area)``.
+    """
     # See https://www.grc.nasa.gov/WWW/winddocs/utilities/b4wind_guide/mach.html
     P = 2 / (gamma + 1)
     Q = 1 - P
     E = 1 / Q
-    R = Ar**2
+    R = area_ratio**2
     a = P**(1 / Q)
     r = (R - 1) / (2 * a)
     X_init = 1 / ((1 + r) + (r * (r + 2))**0.5)
@@ -205,15 +192,15 @@ def mach_from_area_subsonic(Ar, gamma):
 
 
 def area_from_mach(M, gamma):
-    ''' Find the area ratio for a given Mach number.
+    """Find the area ratio for a given Mach number.
 
     Argument:
         M (scalar): Mach number.
-        gamma (scalar): Ratio of specific heats [units: none].
+        gamma (scalar): Ratio of specific heats [units: dimensionless].
 
     Returns:
-        scalar: Area ratio (A / throat area).
-    '''
+        scalar: Area ratio :math:`A / A_t`.
+    """
     return 1 / M * (2 / (gamma + 1) * (1 + (gamma - 1) / 2 * M**2)) \
         **((gamma + 1) / (2 * (gamma - 1)))
 
