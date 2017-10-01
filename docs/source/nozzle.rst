@@ -111,10 +111,42 @@ The heat capacity ratio :math:`\gamma` has a weak effect on exit velocity. Decre
 TODO code example
 
 
-Mach-area Relation
+Mach-Area Relation
 ==================
-TODO need for converging-diverging nozzle
-TOOD importance of expansion ratio
+
+Using the isentropic relations, we can find how the Mach number of the flow varies with the cross sectional area of the nozzle. This allows the design of a nozzle geometry which will accelerate the flow the high speeds needed for rocket propulsion.
+
+Start with the conservation of mass. Because the flow is quasi- one dimensional, the mass flow through every cross-section of the nozzle must be the same:
+
+.. math::
+
+  \dot{m} = A v \rho = \mathrm{const}
+
+where :math:`A` is the cross-sectional area of the nozzle flow passage (normal to the flow axis). To conserve mass, the ratio of areas between any two points along the nozzle axis must be:
+
+.. math::
+
+  \frac{A_1}{A_2} = \frac{v_2 \rho_2}{v_1 \rho_1}
+
+Use the isentropic relations to write the velocity and density in terms of Mach number, and simplify:
+
+.. math::
+  
+  \frac{A_1}{A_2} = \frac{M_2}{M_1} \left( \frac{1 + \frac{\gamma - 1}{2} M_1^2}{1 + \frac{\gamma - 1}{2} M_2^2} \right)^{\frac{\gamma + 1}{2 (\gamma - 1)}}
+
+We can use ``proptools`` to plot Mach-Area relation. Let :math:`M_2 = 1` and plot :math:`A_1 / A_2` vs :math:`M_1`:
+
+.. plot:: examples/plots/mach_area.py
+  :include-source:
+  :align: center
+
+We see that the nozzle area has a minimum at :math:`M = 1`. At subsonic speeds, Mach number increases as the area is decreased. At supersonic speeds (:math:`M > 1`), Mach number increases as area increases. For a flow passage to accelerate gas from subsonic to supersonic speeds, it must first decrease in area, then increase in area. Therefore, most rocket nozzles have a convergent-divergent shape. Larger expansions of the divergent section lead to higher exit Mach numbers.
+
+.. figure:: figures/nozzle_cutaway.jpg
+  :align: center
+
+  The typical converging-diverging shape of rocket nozzles is shown in this cutaway of the Thiokol C-1 engine. Image  credit: `Smithsonian Institution, National Air and Space Museum <https://airandspace.si.edu/collection-objects/rocket-engine-liquid-fuel-radiamic-cutaway-also-designated-c-1>`_
+
 
 Choked Flow
 ===========
