@@ -150,7 +150,28 @@ We see that the nozzle area has a minimum at :math:`M = 1`. At subsonic speeds, 
 
 Choked Flow
 ===========
-TODO
+
+The station of minimum area in a converging-diverging nozzle is known as the *nozzle throat*. If the pressure ratio across the nozzle is at least:
+
+.. math::
+
+  \frac{p_c}{p_e} > \left( \frac{\gamma + 1}{2} \right)^{\frac{\gamma}{\gamma - 1}} \sim 1.8
+
+then the flow at the throat will be sonic (:math:`M = 1`) and the flow in the diverging section will be supersonic. The velocity at the throat is:
+
+.. math::
+
+  v_t = \sqrt{\gamma R T_t} = \sqrt{\frac{2 \gamma}{\gamma + 1} R T_c}
+
+The mass flow at the sonic throat (i.e. through the nozzle) is:
+
+.. math::
+
+  \dot{m} = A_t v_t \rho_t = A_t p_c \frac{\gamma}{\sqrt{\gamma R T_c}} \left( \frac{2}{\gamma + 1} \right)^{\frac{\gamma + 1}{2 (\gamma - 1)}}
+
+Notice that the mass flow does not depend on the exit pressure. If the exit pressure is sufficiently low to produce sonic flow at the throat, the nozzle is *choked* and further decreases in exit pressure will not alter the mass flow. Increasing the chamber pressure increases the density at the throat, and therefore will increase the mass flow which can "fit through" the throat. Increasing the chamber temperature increases the throat velocity but decreases the density by a larger amount; the net effect is to decrease mass flow as :math:`1 / \sqrt{T_c}`.
+
+TODO add mass flow and is_choked code example
 
 Thrust
 ======
