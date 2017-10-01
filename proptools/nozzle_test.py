@@ -20,6 +20,22 @@ class TestMassFlow(unittest.TestCase):
         self.assertAlmostEqual(1.754, m_dot, places=3)
 
 
+class TestThrust(unittest.TestCase):
+    """Unit tests for nozzle.thrust."""
+
+    def test_rpe_3_3(self):
+        """Test against example problem 3-3 from Rocket Propulsion Elements."""
+        T_c = 2800.
+        gamma = 1.2
+        m_molar = R_univ / 360.
+        p_c = 2.039e6
+        A_t = 13.32e-4
+        p_e = 2.549e3
+
+        F = nozzle.thrust(A_t, p_c, p_e, gamma)
+        self.assertAlmostEqual(5001., F, places=0)
+
+
 class TestThrustCoef(unittest.TestCase):
     """Unit tests for nozzle.thrust_coef."""
 

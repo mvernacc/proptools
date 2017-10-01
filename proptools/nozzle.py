@@ -116,6 +116,25 @@ def mass_flow(A_t, p_c, T_c, gamma, m_molar):
             * (2 / (gamma + 1))**((gamma + 1) / (2 * (gamma - 1))))
 
 
+def thrust(A_t, p_c, p_e, gamma, p_a=None, er=None):
+    """Nozzle thrust force.
+
+    Arguments:
+        A_t (scalar): Nozzle throat area [units: meter**2].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit static pressure [units: pascal].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+        p_a (scalar, optional): Ambient pressure [units: pascal]. If None,
+            then p_a = p_e.
+        er (scalar, optional): Nozzle area expansion ratio [units: dimensionless]. If None,
+            then p_a = p_e.
+
+    Returns:
+        scalar: Thrust force [units: newton].
+    """
+    return A_t * p_c * thrust_coef(p_c, p_e, gamma, p_a, er)
+
+
 def mach_from_er(er, gamma):
     """Find the exit Mach number from the area expansion ratio.
     
