@@ -229,7 +229,31 @@ Note that :math:`C_F` is independent of the combustion temperature or the engine
 Expansion Ratio
 ===============
 
-TODO
+The expansion ratio is an important design parameter which affects nozzle efficiency. It is the ratio of exit area to throat area:
+
+.. math::
+
+  \epsilon \equiv \frac{A_e}{A_t}
+
+The expansion ratio appears directly in the equation for thrust coefficient. The expansion ratio also allows the nozzle designer to set the exit pressure. The relation between expansion ratio and pressure ratio can be found from mass conservation and the isentropic relations:
+
+.. math::
+
+  \epsilon &= \frac{A_e}{A_t} = \frac{\rho_t v_t}{\rho_e v_e} \\
+  &= \left( \frac{\gamma + 1}{2} \right)^{\frac{1}{\gamma - 1}} \left( \frac{p_e}{p_c} \right)^{\frac{1}{\gamma}} \sqrt{\frac{\gamma + 1}{\gamma - 1} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)}
+
+This relation is implemented in ``proptools``:
+
+.. literalinclude:: examples/expansion_ratio.py
+
+.. literalinclude:: examples/expansion_ratio_output.txt
+
+We can also easily solve the inverse problem with `scipy.optimize.fsolve <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fsolve.html>`_:
+
+.. literalinclude:: examples/expansion_ratio_inverse.py
+
+.. literalinclude:: examples/expansion_ratio_inverse_output.txt
+
 
 Characteristic velocity
 =======================
