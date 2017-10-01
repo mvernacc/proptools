@@ -271,9 +271,30 @@ The thrust coefficient is maximized at the *matched expansion condition*, where 
 
 TODO replicate RPE figure 3-10
 
+
 Characteristic velocity
 =======================
-TODO
+
+We can define another performance parameter which captures the effects of the combustion gas which is supplied to the nozzle. This is the *characteristic velocity*, :math:`c^*`:
+
+.. math::
+
+  c^* \equiv \frac{A_t p_c}{\dot{m}}
+
+For an ideal rocket, the characteristic velocity is:
+
+.. math::
+
+  c^* = \frac{\sqrt{\gamma R T_c}}{\gamma} \left( \frac{\gamma + 1}{2} \right)^{\frac{\gamma + 1}{2 (\gamma - 1)}}
+
+The characteristic velocity depends only on the exhaust properties (:math:`\gamma, R`) and the combustion temperature. It is therefore a figure of merit for the combustion process and propellants. :math:`c^*` is independent of the nozzle expansion process.
+
+The ideal :math:`c^*` of the example engine is:
+
+.. literalinclude:: examples/c_star_ideal.py
+
+.. literalinclude:: examples/c_star_ideal_output.txt
+
 
 Specific Impulse
 ================
