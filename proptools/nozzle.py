@@ -6,8 +6,8 @@ import warnings
 
 import proptools.constants
 
-R_univ = constants.R_univ
-g = constants.g    # pylint: disable=invalid-name
+R_univ = proptools.constants.R_univ
+g = proptools.constants.g    # pylint: disable=invalid-name
 
 def thrust_coef(p_c, p_e, gamma, p_a=None, er=None):
     """Nozzle thrust coefficient, :math:`C_F`.
@@ -95,6 +95,25 @@ def throat_area(m_dot, p_c, T_c, gamma, m_molar):
         * (2 / (gamma + 1))**((gamma + 1) / (2*gamma - 2)) \
         / (gamma * R  * T_c)**0.5)
     return A_t
+
+
+def mass_flow(A_t, p_c, T_c, gamma, m_molar):
+    """Find the mass flow thorugh a (super)sonic nozzle.
+
+    Rocket Propulsion Elements, 8th edition, equation 3-24.
+
+    Arguments:
+        A_t (scalar): Nozzle throat area [units: meter**2].
+        p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
+        T_c (scalar): Nozzle stagnation temperature [units: kelvin].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+        m_molar (scalar): Exhaust gas mean molar mass [units: kilogram mole**-1].
+
+    Returns:
+        scalar: Mass flow rate :math:`\dot{m}` [units: kilogram second**-1].
+    """
+    return (A_t * p_c * gamma / (gamma * R_univ / m_molar * T_c)**0.5
+            * (2 / (gamma + 1))**((gamma + 1) / (2 * (gamma - 1))))
 
 
 def mach_from_er(er, gamma):
