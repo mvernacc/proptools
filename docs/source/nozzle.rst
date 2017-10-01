@@ -211,7 +211,20 @@ TODO add altitude dual axis
 
 Thrust coefficient
 ==================
-TODO
+We can normalize thrust by :math:`A_t p_c` to give a non-dimensional measure of nozzle efficiency, which is independent of engine size or power level. This is the *thrust coefficient*, :math:`C_F`:
+
+.. math::
+
+  C_F \equiv \frac{F}{A_t p_c}
+
+For an ideal nozzle, the thrust coefficient is:
+
+.. math::
+
+  C_F = \sqrt{\frac{2 \gamma^2}{\gamma - 1} \left( \frac{2}{\gamma + 1}\right)^{\frac{\gamma + 1}{\gamma - 1}} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)} + \frac{p_e - p_a}{p_c} \frac{A_e}{A_t}
+
+Note that :math:`C_F` is independent of the combustion temperature or the engine size. It depends only on the heat capacity ratio, nozzle pressures, and expansion ratio (:math:`A_e / A_t`). Therefore, :math:`C_F` is a figure of merit for the nozzle expansion process. It can be used to compare the efficiency of different nozzle designs on different engines. Values of :math:`C_F` are generally between 0.8 and 2.2, with higher values indicating better nozzle performance. 
+
 
 Expansion Ratio
 ===============
