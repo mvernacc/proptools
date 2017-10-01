@@ -69,7 +69,10 @@ Because the static and stagnation states are isentropically related, :math:`\fra
 
 Use ``proptools`` to plot the stagnation state variables against Mach number:
 
-TODO code example
+.. plot:: examples/plots/isentropic_relations.py
+  :include-source:
+  :align: center
+
 
 Exit velocity
 -------------
@@ -92,10 +95,6 @@ Set state 1 to be the conditions in the combustion chamber: :math:`T_1 = T_c, p_
 
   v_e &= \sqrt{\frac{2 \gamma}{\gamma - 1} R T_c \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)} \\
   &= \sqrt{\frac{2 \gamma}{\gamma - 1} \mathcal{R} \frac{T_c}{\mathcal{M}} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)}
-
-.. math::
-
-  \require{siunitx}
 
 where :math:`\mathcal{R} = 8.314` J mol :sup:`-1` K :sup:`-1` is the universal gas constant and :math:`\mathcal{M}` is the molar mass of the exhaust gas. Temperature and molar mass have the most significant effect on exit velocity. To maximize exit velocity, a rocket should burn propellants which yield a high flame temperature and low molar mass exhaust. This is why many rockets burn hydrogen and oxygen: they yield a high flame temperature, and the exhaust (mostly H\ :sub:`2` and H\ :sub:`2`\ O) is of low molar mass.
 
