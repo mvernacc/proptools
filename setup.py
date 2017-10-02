@@ -46,7 +46,7 @@ setup(
     keywords='rocket propulsion engineering aerospace',
 
 
-    install_requires=['numpy', 'sphinx_rtd_theme'],
+    install_requires=['numpy', 'sphinx_rtd_theme', 'matplotlib', 'scikit-aero'],
 
     packages=find_packages(),
 
