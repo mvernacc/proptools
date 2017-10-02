@@ -1,4 +1,15 @@
-"""Isentropic relations."""
+"""Isentropic relations.
+
+See :ref:`isentropic-relations-tutorial-label` for a
+physical explaination of the isentropic relations.
+
+.. autosummary::
+
+  stag_temperature_ratio
+  stag_pressure_ratio
+  stag_density_ratio
+  velocity
+"""
 from proptools.constants import R_univ
 
 
@@ -36,7 +47,7 @@ def stag_density_ratio(M, gamma):
         gamma (scalar): Heat capacity ratio [units: dimensionless].
 
     Returns:
-        scalar: the stagnation density ratio :math:`\rho_0 / \rho` [units: dimensionless].
+        scalar: the stagnation density ratio :math:`\\rho_0 / \\rho` [units: dimensionless].
     """
     return (1 + (gamma - 1) / 2 * M**2)**(1 / (gamma - 1))
 

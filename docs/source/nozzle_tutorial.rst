@@ -34,6 +34,8 @@ The assumptions of the ideal model are:
 These assumptions are usually acceptably accurate for preliminary design work. Most rocket engines perform within 1% to 6% of the ideal model predictions [RPE]_.
 
 
+.. _isentropic-relations-tutorial-label:
+
 Isentropic Relations
 ====================
 Under the assumption of isentropic flow and calorically perfect gas, there are several useful relations between fluid states. These relations depend on the heat capacity ratio, :math:`\gamma = c_p /c_v`. Consider two gas states, 1 and 2, which are isentropically related (:math:`s_1 = s_2`). The states' pressure, temperature and density ratios are related:

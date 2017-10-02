@@ -1,4 +1,19 @@
-"""Nozzle flow calculations."""
+"""Nozzle flow calculations.
+
+.. autosummary::
+
+  thrust_coef
+  c_star
+  er_from_p
+  throat_area
+  mass_flow
+  thrust
+  mach_from_er
+  mach_from_pr
+  is_choked
+  mach_from_area_subsonic
+  area_from_mach
+"""
 
 import numpy as np
 from scipy.optimize import fsolve

@@ -4,78 +4,20 @@ proptools package
 Submodules
 ----------
 
-proptools.constants module
---------------------------
+.. toctree::
 
-.. automodule:: proptools.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.nonsimple_comp_flow module
-------------------------------------
-
-.. automodule:: proptools.nonsimple_comp_flow
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.nozzle module
------------------------
-
-.. automodule:: proptools.nozzle
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.solid module
-----------------------
-
-.. automodule:: proptools.solid
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.tank_structure module
--------------------------------
-
-.. automodule:: proptools.tank_structure
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.tank_structure_test module
-------------------------------------
-
-.. automodule:: proptools.tank_structure_test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.turbopump module
---------------------------
-
-.. automodule:: proptools.turbopump
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.turbopump_test module
--------------------------------
-
-.. automodule:: proptools.turbopump_test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-proptools.units module
-----------------------
-
-.. automodule:: proptools.units
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   proptools.constants
+   proptools.isentropic
+   proptools.isentropic_test
+   proptools.nonsimple_comp_flow
+   proptools.nozzle
+   proptools.nozzle_test
+   proptools.solid
+   proptools.tank_structure
+   proptools.tank_structure_test
+   proptools.turbopump
+   proptools.turbopump_test
+   proptools.units
 
 Module contents
 ---------------
