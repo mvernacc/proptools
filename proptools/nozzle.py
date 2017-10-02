@@ -177,7 +177,7 @@ def mach_from_er(er, gamma):
 def mach_from_pr(p_c, p_e, gamma):
     """Find the exit Mach number from the pressure ratio.
 
-    Arugments:
+    Arguments:
         p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
         p_e (scalar): Nozzle exit static pressure [units: pascal].
         gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
@@ -232,8 +232,8 @@ def mach_from_area_subsonic(area_ratio, gamma):
 def area_from_mach(M, gamma):
     """Find the area ratio for a given Mach number.
 
-    Argument:
-        M (scalar): Mach number.
+    Arguments:
+        M (scalar): Mach number [units: dimensionless].
         gamma (scalar): Ratio of specific heats [units: dimensionless].
 
     Returns:
