@@ -107,7 +107,11 @@ If :math:`p_e \ll p_c`, the pressures have a weak effect on exit velocity.
 
 The heat capacity ratio :math:`\gamma` has a weak effect on exit velocity. Decreasing :math:`\gamma` increases exit velocity.
 
-TODO code example
+Use ``proptools`` to find the exit velocity of the example engine:
+
+.. literalinclude:: examples/exit_velocity.py
+
+.. literalinclude:: examples/exit_velocity_output.txt
 
 
 Mach-Area Relation
@@ -170,7 +174,11 @@ The mass flow at the sonic throat (i.e. through the nozzle) is:
 
 Notice that the mass flow does not depend on the exit pressure. If the exit pressure is sufficiently low to produce sonic flow at the throat, the nozzle is *choked* and further decreases in exit pressure will not alter the mass flow. Increasing the chamber pressure increases the density at the throat, and therefore will increase the mass flow which can "fit through" the throat. Increasing the chamber temperature increases the throat velocity but decreases the density by a larger amount; the net effect is to decrease mass flow as :math:`1 / \sqrt{T_c}`.
 
-TODO add mass flow and is_choked code example
+Use ``proptools`` to compute the mass flow of the example engine:
+
+.. literalinclude:: examples/choked.py
+
+.. literalinclude:: examples/choked_output.txt
 
 Thrust
 ======
@@ -200,8 +208,6 @@ TODO create a thrust function instead of using C_f
 Note that thrust is almost linear in chamber pressure.
 
 We can also explore the variation of thrust with ambient pressure for fixed :math:`p_c, p_e`:
-
-TODO add altitude dual axis
 
 .. plot:: examples/plots/thrust_pa.py
   :include-source:
