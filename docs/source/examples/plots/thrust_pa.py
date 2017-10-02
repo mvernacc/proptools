@@ -1,5 +1,4 @@
 """Plot thrust vs ambient pressure."""
-from scipy.optimize import fsolve
 import numpy as np
 from matplotlib import pyplot as plt
 import skaero.atmosphere.coesa as atmo
@@ -14,7 +13,7 @@ A_t = np.pi * (0.1 / 2)**2    # Throat area [units: meter**2]
 # Compute thrust [units: newton]
 F = nozzle.thrust(A_t, p_c, p_e, gamma,
                   p_a=p_a, er=nozzle.er_from_p(p_c, p_e, gamma))
-   
+
 ax1 = plt.subplot(111)
 plt.plot(p_a * 1e-3, F * 1e-3)
 plt.xlabel('Ambient pressure $p_a$ [kPa]')
