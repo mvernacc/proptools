@@ -12,7 +12,11 @@ g = proptools.constants.g    # pylint: disable=invalid-name
 def thrust_coef(p_c, p_e, gamma, p_a=None, er=None):
     """Nozzle thrust coefficient, :math:`C_F`.
 
-    Equation 1-33a in Huzel and Huang.
+    The thrust coefficient is a figure of merit for the nozzle expansion process.
+    See :ref:`thrust-coefficient-label` for a description of the physical meaning of the
+    thrust coefficient.
+
+    Reference: Equation 1-33a in Huzel and Huang.
 
     Arguments:
         p_c (scalar): Nozzle stagnation chamber pressure [units: pascal].
@@ -24,7 +28,7 @@ def thrust_coef(p_c, p_e, gamma, p_a=None, er=None):
             then p_a = p_e.
 
     Returns:
-        scalar: C_F [units: dimensionless].
+        scalar: The thrust coefficient, :math:`C_F` [units: dimensionless].
     """
     if (p_a is None and er is not None) or (er is None and p_a is not None):
         raise ValueError('Both p_a and er must be provided.')

@@ -212,6 +212,8 @@ We can also explore the variation of thrust with ambient pressure for fixed :mat
   :align: center
 
 
+.. _thrust-coefficient-label:
+
 Thrust coefficient
 ==================
 We can normalize thrust by :math:`A_t p_c` to give a non-dimensional measure of nozzle efficiency, which is independent of engine size or power level. This is the *thrust coefficient*, :math:`C_F`:
