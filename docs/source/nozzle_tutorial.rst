@@ -116,6 +116,8 @@ Use ``proptools`` to find the exit velocity of the example engine:
 .. literalinclude:: examples/exit_velocity_output.txt
 
 
+.. _mach-area-tutorial-label:
+
 Mach-Area Relation
 ==================
 
@@ -152,6 +154,7 @@ We see that the nozzle area has a minimum at :math:`M = 1`. At subsonic speeds, 
 
   The typical converging-diverging shape of rocket nozzles is shown in this cutaway of the Thiokol C-1 engine. Image  credit: `Smithsonian Institution, National Air and Space Museum <https://airandspace.si.edu/collection-objects/rocket-engine-liquid-fuel-radiamic-cutaway-also-designated-c-1>`_
 
+.. _choked-flow-tutorial-label:
 
 Choked Flow
 ===========
@@ -233,6 +236,8 @@ For an ideal nozzle, the thrust coefficient is:
 Note that :math:`C_F` is independent of the combustion temperature or the engine size. It depends only on the heat capacity ratio, nozzle pressures, and expansion ratio (:math:`A_e / A_t`). Therefore, :math:`C_F` is a figure of merit for the nozzle expansion process. It can be used to compare the efficiency of different nozzle designs on different engines. Values of :math:`C_F` are generally between 0.8 and 2.2, with higher values indicating better nozzle performance. 
 
 
+.. _expansion-ratio-tutorial-label:
+
 Expansion Ratio
 ===============
 
@@ -280,6 +285,9 @@ The following plot shows :math:`C_F` vs altitude for our example engine with two
 .. plot:: examples/plots/cf_alt.py
   :include-source:
   :align: center
+
+
+.. _characteristic_velocity-tutorial-label:
 
 Characteristic velocity
 =======================
