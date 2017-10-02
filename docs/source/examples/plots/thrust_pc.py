@@ -10,8 +10,8 @@ p_a = 100e3    # Ambient pressure [units: pascal]
 gamma = 1.2    # Exhaust heat capacity ratio [units: dimensionless]
 A_t = np.pi * (0.1 / 2)**2    # Throat area [units: meter**2]
 
-C_f = nozzle.thrust_coef(p_c, p_e, gamma)    # Thrust coefficient [units: dimensionless]
-F = A_t * p_c * C_f    # Thrust [units: newton]
+# Compute thrust [units: newton]
+F = nozzle.thrust(A_t, p_c, p_e, gamma)
 
 plt.plot(p_c * 1e-6, F * 1e-3)
 plt.xlabel('Chamber pressure $p_c$ [MPa]')

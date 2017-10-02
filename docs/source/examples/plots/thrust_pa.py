@@ -11,10 +11,10 @@ p_a = np.linspace(0, 100e3)    # Ambient pressure [units: pascal]
 gamma = 1.2    # Exhaust heat capacity ratio [units: dimensionless]
 A_t = np.pi * (0.1 / 2)**2    # Throat area [units: meter**2]
 
-C_f = nozzle.thrust_coef(p_c, p_e, gamma,    # Thrust coefficient [units: dimensionless]
-                         p_a=p_a, er=nozzle.er_from_p(p_c, p_e, gamma))
-F = A_t * p_c * C_f    # Thrust [units: newton]
-
+# Compute thrust [units: newton]
+F = nozzle.thrust(A_t, p_c, p_e, gamma,
+                  p_a=p_a, er=nozzle.er_from_p(p_c, p_e, gamma))
+   
 ax1 = plt.subplot(111)
 plt.plot(p_a * 1e-3, F * 1e-3)
 plt.xlabel('Ambient pressure $p_a$ [kPa]')

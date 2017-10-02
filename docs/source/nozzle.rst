@@ -199,8 +199,6 @@ Note that thrust depends only on :math:`\gamma` and the nozzle pressures and are
 
 Use ``proptools`` to plot thrust versus chamber pressure for the example engine:
 
-TODO create a thrust function instead of using C_f
-
 .. plot:: examples/plots/thrust_pc.py
   :include-source:
   :align: center
