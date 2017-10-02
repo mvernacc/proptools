@@ -243,7 +243,7 @@ The expansion ratio appears directly in the equation for thrust coefficient. The
 .. math::
 
   \epsilon &= \frac{A_e}{A_t} = \frac{\rho_t v_t}{\rho_e v_e} \\
-  &= \left( \frac{\gamma + 1}{2} \right)^{\frac{1}{\gamma - 1}} \left( \frac{p_e}{p_c} \right)^{\frac{1}{\gamma}} \sqrt{\frac{\gamma + 1}{\gamma - 1} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)}
+  &= \left( \left( \frac{\gamma + 1}{2} \right)^{\frac{1}{\gamma - 1}} \left( \frac{p_e}{p_c} \right)^{\frac{1}{\gamma}} \sqrt{\frac{\gamma + 1}{\gamma - 1} \left(1 - \left( \frac{p_e}{p_c} \right)^{\frac{\gamma - 1}{\gamma}} \right)} \right)^{-1}
 
 This relation is implemented in ``proptools``:
 
