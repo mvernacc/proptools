@@ -271,9 +271,11 @@ The thrust coefficient is maximized at the *matched expansion condition*, where 
 
   This illustration shows two variants of an engine family, one designed for a first stage booster (left) and the other for a second stage (right). The first stage (e.g. sea level) engine has a smaller expansion ratio than the second stage (e.g. vacuum) engine. Image credit: `shadowmage <https://forum.kerbalspaceprogram.com/index.php?/profile/138730-shadowmage/>`_.
 
+The following plot shows :math:`C_F` vs altitude for our example engine with two different nozzles: a small nozzle suited to a first stage application (blue curve) and a large nozzle for a second stage (orange curve). Compare these curves to the performance of a hypothetical  matched nozzle, which expands to :math:`p_e = p_a` at every altitude. The fixed-expansion nozzles perform well at their design altitude, but have lower :math:`C_F` than a matched nozzle at all other altitudes.
 
-TODO replicate RPE figure 3-10
-
+.. plot:: examples/plots/cf_alt.py
+  :include-source:
+  :align: center
 
 Characteristic velocity
 =======================
