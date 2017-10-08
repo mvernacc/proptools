@@ -3,13 +3,6 @@ from __future__ import division
 from proptools.constants import charge, amu_kg, g
 
 
-# Xenon atom mass [units: kilogram].
-m_Xe = 131.29 * amu_kg
-
-# Krypton atom mass [units: kilogram].
-m_Kr = 83.798 * amu_kg
-
-
 def thrust(I_b, V_b, m_ion):
     """Thrust of an electric thruster.
 
@@ -50,7 +43,7 @@ def double_ion_thrust_correction(double_fraction):
     """Doubly-charged ion thrust correction factor.
 
     Compute the thrust correction factor for the presence of doubly charged ions in the beam.
-    This factor is denoted as :math:`\alpha` in Goebel and Katz.
+    This factor is denoted as :math:`\\alpha` in Goebel and Katz.
 
     Reference: Goebel and Katz, equation 2.3-14.
 
@@ -59,7 +52,7 @@ def double_ion_thrust_correction(double_fraction):
             current, :math:`I^{++} / I^+` [units: dimensionless].
 
     Returns:
-        scalar in (0, 1]: The thrust correction factor, :math:`\alpha` [units: dimensionless].
+        scalar in (0, 1]: The thrust correction factor, :math:`\\alpha` [units: dimensionless].
     """
     if double_fraction < 0 or double_fraction > 1:
         raise ValueError('double_fraction {:.f} is not in [0, 1]'.format(double_fraction))
@@ -140,3 +133,15 @@ def optimal_isp_delta_v(dv, total_efficiency, t_m, specific_mass,
     """
     """
     pass
+
+
+# Put functions in the electric module.
+thrust.__module__ = 'proptools.electric'
+jet_power.__module__ = 'proptools.electric'
+double_ion_thrust_correction.__module__ = 'proptools.electric'
+specific_impulse.__module__ = 'proptools.electric'
+total_efficiency.__module__ = 'proptools.electric'
+thrust_per_power.__module__ = 'proptools.electric'
+stuhlinger_velocity.__module__ = 'proptools.electric'
+optimal_isp_thrust_time.__module__ = 'proptools.electric'
+optimal_isp_delta_v.__module__ = 'proptools.electric'
