@@ -4,6 +4,7 @@ import unittest
 import random
 import numpy as np
 from proptools import electric
+import proptools.constants
 
 class TestThrust(unittest.TestCase):
     """Unit tests for electric.thrust."""
@@ -124,11 +125,72 @@ class TestThrustPerPower(unittest.TestCase):
     def test_exception(self):
         """Check that the function raises a value error for invalid inputs."""
         with self.assertRaises(ValueError):
-            electric.total_efficiency(divergence_correction=-1)
+            electric.thrust_per_power(1, total_efficiency=-1)
+
+
+class TestStuhlingerVelocity(unittest.TestCase):
+    """Unit tests for electric.stuhlinger_velocity."""
+
+    def test_example(self):
+        """Prof Lozano's notes do not provide numerical examples; I made this up."""
+        # Compare to https://www.wolframalpha.com/input/?i=(2+*+0.708+*+(116+days)+%2F+(100+kilogram%2Fkilowatt))%5E0.5
+        eta_t = 0.708    # Total efficiency [units: dimensionless].
+        t_m = 10e6 # Mission time (about 116 days) [units: seconds].
+        specific_mass = 100e-3    # Propulsion+power specific mass [units: kilogram watt**-1].
+        v_ch = electric.stuhlinger_velocity(eta_t, t_m, specific_mass)
+        self.assertLess(abs(v_ch - 11.9e3), 30)
+
+    def test_exception(self):
+        """Check that the function raises a value error for invalid inputs."""
         with self.assertRaises(ValueError):
-            electric.total_efficiency(mass_utilization=-1)
-        with self.assertRaises(ValueError):
-            electric.total_efficiency(electrical_efficiency=-1)
+            electric.stuhlinger_velocity(-1, 1, 1)
+
+
+class TestOptimalIspThrustTime(unittest.TestCase):
+    """Unit tests for electric.optimal_isp_thrust_time."""
+
+    def test_example(self):
+        """Prof Lozano's notes do not provide numerical examples; I made this up."""
+        # Compare to https://www.wolframalpha.com/input/?i=(2+*+0.708+*+(116+days)+%2F+(100+kilogram%2Fkilowatt))%5E0.5+%2F+(9.81+meter+*+second%5E-2)
+        eta_t = 0.708    # Total efficiency [units: dimensionless].
+        t_m = 10e6 # Mission time (about 116 days) [units: seconds].
+        specific_mass = 100e-3    # Propulsion+power specific mass [units: kilogram watt**-1].
+        I_sp_opt = electric.optimal_isp_thrust_time(eta_t, t_m, specific_mass)
+        self.assertLess(abs(I_sp_opt - 1214), 5)
+
+class TestOptimalIspDeltaV(unittest.TestCase):
+    """Unit  tests for electric.optimal_isp_delta_v."""
+
+    def test_const_eff(self):
+        """Test at constant efficiency."""
+        # Compare to Lozano 16.522 note lect 3 figure 1.
+        eta_t = 0.708    # Total efficiency [units: dimensionless].
+        t_m = 10e6 # Mission time (about 116 days) [units: seconds].
+        specific_mass = 100e-3    # Propulsion+power specific mass [units: kilogram watt**-1].
+        v_ch = electric.stuhlinger_velocity(eta_t, t_m, specific_mass)
+        dv = 0.2 * v_ch   # Delta-v [units: meter second**-1].
+
+        # Optimal I_sp read off figure 1 for dv/v_ch = 0.2.
+        I_sp_opt_fig1 = 0.85 * v_ch / proptools.constants.g
+
+        I_sp_opt = electric.optimal_isp_delta_v(dv, eta_t, t_m, specific_mass)
+
+        self.assertLess(abs(I_sp_opt - I_sp_opt_fig1), 20)
+
+    def test_variable_efficiency(self):
+        """Test that introducing the discharge loss increases the optimal specific impulse."""
+        eta_t = 0.708    # Total efficiency [units: dimensionless].
+        t_m = 10e6 # Mission time (about 116 days) [units: seconds].
+        specific_mass = 100e-3    # Propulsion+power specific mass [units: kilogram watt**-1].
+        v_ch = electric.stuhlinger_velocity(eta_t, t_m, specific_mass)
+        dv = 0.2 * v_ch   # Delta-v [units: meter second**-1].
+
+        I_sp_opt_const = electric.optimal_isp_delta_v(dv, eta_t, t_m, specific_mass)
+        I_sp_opt_var = electric.optimal_isp_delta_v(dv, eta_t, t_m, specific_mass,
+                                                    discharge_loss=200,
+                                                    m_ion=electric.m_Xe)
+        self.assertGreater(I_sp_opt_var, I_sp_opt_const)
+
 
 if __name__ == '__main__':
     unittest.main()
