@@ -107,5 +107,28 @@ class TestTotalEffciency(unittest.TestCase):
             electric.total_efficiency(electrical_efficiency=-1)
 
 
+class TestThrustPerPower(unittest.TestCase):
+    """Unit tests for electric.thrust_per_power."""
+
+    def test_gk_example(self):
+        """Test against the example values given in Goebel and Katz.
+        "thrust produced is 122.4 mN [...] 2 A beam at 1500 V [...] dissipated power of 528.3 W"
+        """
+        eta_t = 0.708    # Total efficiency [units: dimensionless].
+        I_sp = 4127    # Specific impulse [units: seconds].
+        P_in = 2 * 1500 + 528.3    # Input power [units: watt].
+        F = 122.4e-3    # Thrust force [units: watt].
+        fp = electric.thrust_per_power(I_sp, eta_t)
+        self.assertAlmostEqual(fp, F / P_in, places=6)
+
+    def test_exception(self):
+        """Check that the function raises a value error for invalid inputs."""
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(divergence_correction=-1)
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(mass_utilization=-1)
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(electrical_efficiency=-1)
+
 if __name__ == '__main__':
     unittest.main()

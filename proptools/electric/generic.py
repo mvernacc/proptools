@@ -129,18 +129,30 @@ def total_efficiency(divergence_correction=1, double_fraction=1, mass_utilizatio
     return gamma**2 * mass_utilization * electrical_efficiency
 
 
-def thrust_per_power(I_sp, divergence_correction=1, double_fraction=1, mass_utilization=1):
-    """
+def thrust_per_power(I_sp, total_efficiency=1):
+    """Thrust/power ratio of an electric thruster.
 
-    Reference: Goebel and Katz, equation 2.5-9
+    Reference: Goebel and Katz, equation 2.5-9.
+
+    Arguments:
+        I_sp (scalar): Specific impulse [units:second].
+        total_efficiency (scalar in (0, 1]): The total efficiency of the thruster
+            [units: dimensionless].
+
+    Returns:
+        scalar: Thrust force per unit power input [units: newton watt**-1].
     """
-    pass
+    # Check inputs
+    if total_efficiency < 0 or total_efficiency > 1:
+        raise ValueError('total_efficiency {:.f} is not in [0, 1]'.format(total_efficiency))
+
+    return (2 / g) * (total_efficiency / I_sp)
 
 
 def stuhlinger_velocity(total_efficiency, t_m, specific_mass):
     """
 
-    Reference: Lozano, equation 3-7
+    Reference: Lozano, equation 3-7.
     """
     pass
 
