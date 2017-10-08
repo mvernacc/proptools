@@ -77,7 +77,7 @@ def specific_impulse(V_b, m_ion, divergence_correction=1, double_fraction=1, mas
         double_fraction (scalar in [0, 1]): The doubly-charged ion current over the singly-charged ion
             current, :math:`I^{++} / I^+` [units: dimensionless].
         mass_utilization (scalar in (0, 1])): Mass utilization efficiency [units: dimensionless].
-    
+
     Returns:
         scalar: the specific impulse [units: second].
     """
@@ -98,11 +98,35 @@ def specific_impulse(V_b, m_ion, divergence_correction=1, double_fraction=1, mas
 
 def total_efficiency(divergence_correction=1, double_fraction=1, mass_utilization=1,
                      electrical_efficiency=1):
-    """
+    """Total efficiency of an electric thruster.
 
-    Reference: Goebel and Katz, equation 2.5-7. 
+    The total efficiency is defined as the ratio of jet power to input power:
+
+    :math:`\\eta_T \\equiv \\frac{P_{jet}}{P_{in}}`
+
+    Reference: Goebel and Katz, equation 2.5-7.
+
+    Arguments:
+        divergence_correction (scalar in (0, 1])): Thrust correction factor for beam divergence
+            [units: dimensionless].
+        double_fraction (scalar in [0, 1]): The doubly-charged ion current over the singly-charged ion
+            current, :math:`I^{++} / I^+` [units: dimensionless].
+        mass_utilization (scalar in (0, 1])): Mass utilization efficiency [units: dimensionless].
+        electrical_efficiency (scalar in (0, 1])): Electrical efficiency [units: dimensionless].
+
+    Returns:
+        scalar: Total efficiency [units: dimensionless].
     """
-    pass
+    # Check inputs
+    if divergence_correction < 0 or divergence_correction > 1:
+        raise ValueError('divergence_correction {:.f} is not in [0, 1]'.format(divergence_correction))
+    if mass_utilization < 0 or mass_utilization > 1:
+        raise ValueError('mass_utilization {:.f} is not in [0, 1]'.format(mass_utilization))
+    if electrical_efficiency < 0 or electrical_efficiency > 1:
+        raise ValueError('electrical_efficiency {:.f} is not in [0, 1]'.format(electrical_efficiency))
+
+    gamma = divergence_correction * double_ion_thrust_correction(double_fraction)
+    return gamma**2 * mass_utilization * electrical_efficiency
 
 
 def thrust_per_power(I_sp, divergence_correction=1, double_fraction=1, mass_utilization=1):

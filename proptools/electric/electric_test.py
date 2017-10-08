@@ -76,5 +76,36 @@ class TestIsp(unittest.TestCase):
         with self.assertRaises(ValueError):
             electric.specific_impulse(1, 1, mass_utilization=-1)
 
+
+class TestTotalEffciency(unittest.TestCase):
+    """Unit tests for electric.total_efficiency"""
+
+    def test_gk_example(self):
+        """Test against the example values given in Goebel and Katz page 29.
+
+        "Using our previous example of an ion thruster with 10-deg half-angle divergence,
+        10% double ion current, 90% mass utilization efficiency and [...] beam at 1500 V
+        [...] the electrical efficiency is [...] 0.857 [...] and the total efficiency is
+        [...] 0.708"
+        """
+        eta_t_gk = 0.708    # Correct total efficiency value from Goebel and Katz [units: dimensionless].
+        V_b = 1500    # Beam voltage [units: volt].
+        divergence_correction = np.cos(np.deg2rad(10.))    # Beam divergence correction factor.
+        eta_t = electric.total_efficiency(divergence_correction=divergence_correction,
+                                          double_fraction=0.1,
+                                          mass_utilization=0.9,
+                                          electrical_efficiency=0.857)
+        self.assertAlmostEqual(eta_t_gk, eta_t, places=2)
+
+    def test_exception(self):
+        """Check that the function raises a value error for invalid inputs."""
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(divergence_correction=-1)
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(mass_utilization=-1)
+        with self.assertRaises(ValueError):
+            electric.total_efficiency(electrical_efficiency=-1)
+
+
 if __name__ == '__main__':
     unittest.main()
