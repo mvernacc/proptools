@@ -1,6 +1,6 @@
 """Generic electric propulsion design equations."""
-
-from proptools.constants import charge, amu_kg
+from __future__ import division
+from proptools.constants import charge, amu_kg, g
 
 
 # Xenon atom mass [units: kilogram].
@@ -30,26 +30,77 @@ def thrust(I_b, V_b, m_ion):
 
 
 def jet_power(F, m_dot):
-    """
+    """Jet power of a rocket propulsion device.
+
+    Compute the kinetic power of the jet for a given thrust level and mass flow.
 
     Reference: Goebel and Katz, equation 2.3-4.
+
+    Arguments:
+        F (scalar): Thrust force [units: newton].
+        m_dot (scalar): Jet mass flow rate [units: kilogram second**-1].
+
+    Returns:
+        scalar: jet power [units: watt].
     """
-    pass
+    return F**2 / (2 *  m_dot)
 
 
 def double_ion_thrust_correction(double_fraction):
-    """
+    """Doubly-charged ion thrust correction factor.
+
+    Compute the thrust correction factor for the presence of doubly charged ions in the beam.
+    This factor is denoted as :math:`\alpha` in Goebel and Katz.
 
     Reference: Goebel and Katz, equation 2.3-14.
+
+    Arguments:
+        double_fraction (scalar in [0, 1]): The doubly-charged ion current over the singly-charged ion
+            current, :math:`I^{++} / I^+` [units: dimensionless].
+
+    Returns:
+        scalar in (0, 1]: The thrust correction factor, :math:`\alpha` [units: dimensionless].
     """
-    pass
+    if double_fraction < 0 or double_fraction > 1:
+        raise ValueError('double_fraction {:.f} is not in [0, 1]'.format(double_fraction))
+
+    return (1  + (0.5)**0.5 * double_fraction) / (1 + double_fraction)
 
 
 def specific_impulse(V_b, m_ion, divergence_correction=1, double_fraction=1, mass_utilization=1):
-    """
+    """Specific impulse of an electric thruster.
+
+    If only ``V_b`` and ``m_ion`` are provided, the ideal specific impulse will be computed.
+    If ``divergence_correction``, ``double_fraction``, or ``mass_utilization`` are provided,
+    the specific impulse will be reduced by the corresponding efficiency factors.
 
     Reference: Goebel and Katz, equation 2.4-8.
+
+    Arguments:
+        V_b (scalar): Beam voltage [units: volt].
+        m_ion (scalar): Ion mass [units: kilogram].
+        divergence_correction (scalar in (0, 1])): Thrust correction factor for beam divergence
+            [units: dimensionless].
+        double_fraction (scalar in [0, 1]): The doubly-charged ion current over the singly-charged ion
+            current, :math:`I^{++} / I^+` [units: dimensionless].
+        mass_utilization (scalar in (0, 1])): Mass utilization efficiency [units: dimensionless].
+    
+    Returns:
+        scalar: the specific impulse [units: second].
     """
+    # Check inputs
+    if divergence_correction < 0 or divergence_correction > 1:
+        raise ValueError('divergence_correction {:.f} is not in [0, 1]'.format(divergence_correction))
+    if mass_utilization < 0 or mass_utilization > 1:
+        raise ValueError('mass_utilization {:.f} is not in [0, 1]'.format(mass_utilization))
+
+    # Compute the efficiency factor
+    efficiency = divergence_correction * double_ion_thrust_correction(double_fraction) * mass_utilization
+
+    # Compute the ideal specific impulse
+    I_sp_ideal = 1 / g * (2 * (charge / m_ion) * V_b)**0.5
+
+    return efficiency * I_sp_ideal
 
 
 def total_efficiency(divergence_correction=1, double_fraction=1, mass_utilization=1,
