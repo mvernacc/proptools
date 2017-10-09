@@ -107,3 +107,22 @@ Optimal Specific Impulse
 ========================
 
 For electrically propelled spacecraft, there is an optimal specific impulse which will maximize the payload mass fraction of a given mission. While increasing specific impulse decreases the required propellant mass, it also increases the required power at a particular thrust level, which increases the mass of the power supply. The optimal specific impulse minimizes the combined mass of the propellant and power supply.
+
+The optimal specific impulse depends on several factors:
+
+#. The mission thrust duration, :math:`t_m`. Longer thrust durations reduce the required thrust (if the same total impulse or :math:`\Delta v` is to be delivered), and therefore reduce the power and power supply mass at a given :math:`I_{sp}`. Therefore, longer thrust durations increase the optimal :math:`I_{sp}`.
+#. The specific mass of the power supply, :math:`\alpha`. This is the ratio of power supply mass to power, and is typically 20 to 200 kg kW :sup:`-1` for solar-electric systems. The specific impulse optimization assumes that power supply mass is linear with respect to power. Increasing the specific mass reduces the optimal :math:`I_{sp}`.
+#. The total efficiency of the thruster.
+#. The :math:`\Delta v` of the mission. Higher :math:`\Delta v` (in a fixed time window) requires more thrust, and therefore leads to a lower optimal :math:`I_{sp}`.
+
+
+Consider an example mission to circularize the orbit of a geostationary satellite launched onto a elliptical transfer orbit. Assume that the low-thrust circularization maneuver requires a :math:`\Delta v` of 2 km s :sup:`-1` over 100 days. The thruster is 70% efficient and the power supply specific mass is 50 kg kW :sup:`-1`:
+
+.. literalinclude:: examples/electric/isp_opt.py
+
+.. literalinclude:: examples/electric/isp_opt_output.txt
+
+
+For the mathematical details of specific impulse optimization, see [Lozano]_.
+
+.. [Lozano] P. Lozano, *16.522 Lecture Notes*, Lecture 3-4 Mission Analysis for Electric Propulsion. Online: https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-522-space-propulsion-spring-2015/lecture-notes/MIT16_522S15_Lecture3-4.pdf
