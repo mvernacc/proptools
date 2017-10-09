@@ -1,0 +1,2 @@
+Thrust = 52.2 mN
+Specific Impulse = 3336 s
