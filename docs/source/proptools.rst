@@ -8,6 +8,7 @@ Submodules
 
    proptools.constants
    proptools.isentropic
+   proptools.electric
    proptools.isentropic_test
    proptools.nonsimple_comp_flow
    proptools.nozzle

@@ -1,0 +1,3 @@
+Jet power = 857 W
+Total efficiency = 0.703
+Input power = 1219 W
