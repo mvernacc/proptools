@@ -260,9 +260,12 @@ def optimal_isp_delta_v(dv, total_efficiency, t_m, specific_mass,
         """
         return np.exp(-dv / c) - (c**2 + v_L**2) / (v_ch**2) * (1 - np.exp(-dv / c))
 
+    # Scale factor to avoid numerical problems with minimize.
+    scale_factor = 10e3
+
     # Find the c which maximizes the mass fraction.
-    result = minimize(lambda c: -mass_fraction(c), 10e3)
-    c = result.x[0]
+    result = minimize(lambda c: -mass_fraction(c * scale_factor), 1.)
+    c = result.x[0] * scale_factor
 
     return c / g
 

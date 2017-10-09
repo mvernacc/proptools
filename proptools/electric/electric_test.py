@@ -171,7 +171,7 @@ class TestOptimalIspDeltaV(unittest.TestCase):
         dv = 0.2 * v_ch   # Delta-v [units: meter second**-1].
 
         # Optimal I_sp read off figure 1 for dv/v_ch = 0.2.
-        I_sp_opt_fig1 = 0.85 * v_ch / proptools.constants.g
+        I_sp_opt_fig1 = 0.90 * v_ch / proptools.constants.g
 
         I_sp_opt = electric.optimal_isp_delta_v(dv, eta_t, t_m, specific_mass)
 
