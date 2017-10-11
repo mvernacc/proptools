@@ -65,7 +65,7 @@ The kinetic power of the jet is given by:
 
 .. math::
 
-  P_{jet} = \frac{T^2}{2 \dot{m}}
+  P_{jet} = \frac{F^2}{2 \dot{m}}
 
 where :math:`\dot{m}` is the jet mass flow. Increasing thrust with increasing mass flow (i.e. increasing :math:`I_{sp}`) will increase the kinetic power of the jet.
 
