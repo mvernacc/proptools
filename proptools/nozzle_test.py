@@ -124,5 +124,32 @@ class TestMachArea(unittest.TestCase):
                 self.assertTrue(np.isclose(nozzle.area_from_mach(M, gamma), Ar))
 
 
+class PressureFromEr(unittest.TestCase):
+    """Unit tests for nozzle.pressure_from_er and nozzle.er_from_p"""
+
+    def test_rpe_3_3(self):
+        """Test against example problem 3-3 from Rocket Propulsion Elements."""
+        gamma = 1.20    # Given ratio of specific heats [units: dimensionless].
+        er_rpe = 60.    # Given area expansion ratio [units: dimensionless].
+        p_c_rpe = 2.039e6    # Given chamber pressure [units: pascal].
+        p_e_rpe = 2.549e3    # Given exit pressure [units: pascal].
+
+        er = nozzle.er_from_p(p_c_rpe, p_e_rpe, gamma)
+        self.assertTrue(np.isclose(er, er_rpe, rtol=1e-2))
+
+        pr = nozzle.pressure_from_er(er_rpe, gamma)
+        self.assertTrue(np.isclose(pr, p_e_rpe / p_c_rpe, rtol=1e-2))
+
+    def test_inverse(self):
+        """Test that pressure_from_er is the inverse of area_from_mach."""
+        for gamma in np.linspace(1.1, 1.6, 5):
+            for er in np.linspace(2, 400, 10):
+                pr = nozzle.pressure_from_er(er, gamma)
+                p_e = 1.
+                p_c = p_e / pr
+                er_calc = nozzle.er_from_p(p_c, p_e, gamma)
+                self.assertTrue(np.isclose(er_calc, er, rtol=1e-3))
+
+
 if __name__ == '__main__':
     unittest.main()

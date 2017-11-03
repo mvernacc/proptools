@@ -260,7 +260,7 @@ This relation is implemented in ``proptools``:
 
 .. literalinclude:: examples/expansion_ratio_output.txt
 
-We can also easily solve the inverse problem with `scipy.optimize.fsolve <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fsolve.html>`_:
+We can also solve the inverse problem:
 
 .. literalinclude:: examples/expansion_ratio_inverse.py
 

@@ -13,6 +13,7 @@
   is_choked
   mach_from_area_subsonic
   area_from_mach
+  pressure_from_er
 """
 
 import numpy as np
@@ -102,6 +103,26 @@ def er_from_p(p_c, p_e, gamma):
         * ((gamma + 1) / (gamma - 1)*( 1 - (p_e / p_c)**((gamma -1) / gamma)))**0.5
     er = 1/AtAe
     return er
+
+
+def pressure_from_er(er, gamma):
+    """Find the exit/chamber pressure ratio from the nozzle expansion ratio.
+
+    See :ref:`expansion-ratio-tutorial-label` for a physical description of the
+    expansion ratio.
+
+    Reference: Rocket Propulsion Elements, 8th Edition, Equation 3-25
+    
+    Arguments:
+        er (scalar): Expansion ratio :math:`\\epsilon = A_e / A_t` [units: dimensionless].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+
+    Returns:
+        scalar: Pressure ratio :math:`p_e/p_c` [units: dimensionless].
+    """
+    pressure_ratio = fsolve(lambda x: er - er_from_p(1., x, gamma), x0=1e-3 / er)[0]
+    assert pressure_ratio < 1
+    return pressure_ratio
 
 
 def throat_area(m_dot, p_c, T_c, gamma, m_molar):
