@@ -1,13 +1,13 @@
 """ Solid rocket motor equations.
 """
 
-def chamber_pressure(K_n, a, n, rho_solid, c_star):
+def chamber_pressure(K, a, n, rho_solid, c_star):
     """ Chamber pressure due to solid propellant combustion.
 
     See equation 12-6 in Rocket Propulsion Elements 8th edition.
 
     Args:
-        K (scalar): Ratio of burning area to throat area, A_b/A_t [units: dimensionless].
+        K (scalar): Ratio of burning area to throat area, :math:`A_b/A_t` [units: dimensionless].
         a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
         n (scalar): Propellant burn rate exponent [units: dimensionless].
         rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
@@ -16,7 +16,7 @@ def chamber_pressure(K_n, a, n, rho_solid, c_star):
     Returns:
         Chamber pressure [units: pascal].
     """
-    return (K_n * rho_solid * a * c_star) ** (1 / (1 - n))
+    return (K * rho_solid * a * c_star) ** (1 / (1 - n))
 
 
 def burn_area_ratio(p_c, a, n, rho_solid, c_star):
