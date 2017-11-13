@@ -29,6 +29,7 @@ Tutorials
   :maxdepth: 2
 
   nozzle_tutorial
+  solid_tutorial
   electric_tutorial
 
 
