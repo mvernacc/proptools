@@ -157,3 +157,31 @@ We can use proptools to quickly find the chamber pressure and thrust of the exam
 
 Burn area evolution and thrust curves
 -------------------------------------
+
+In most propellant grain geometries, the burn area of the propellant grain changes as the flame front advances and propellant is consumed. This change in burn area causes the chamber pressure and thrust to change during the burn. The variation of thrust (or chamber pressure) with time is called a thrust curve. Thrust curves are classified as regressive (decreasing with time), neutral or progressive (increasing with time).
+
+If we know how the burn area :math:`A_b` varies with the flame front progress distance :math:`x`, we can use ``proptools`` to predict the thrust curve. For example, consider a cylindrical propellant with a hollow circular core. The core radius :math:`r_{in}` is 0.15 m, the outer radius :math:`r_{out}` is 0.20 m, and the length :math:`L` is 1.0 m. The burn area is given by:
+
+.. math::
+
+  A_b(x) = 2 \pi (r_{in} + x) L
+
+.. figure:: figures/solid/example_grain.png
+  :align: center
+
+  Dimensions of the example cylindrical propellant grain.
+
+Assume that the propellant properties are the same as in the previous example. The nozzle throat area is still 839 mm :sup:`2`, and the nozzle expansion area ratio is 8.
+
+.. plot:: examples/solid/plots/thrust_curve.py
+  :include-source:
+  :align: center
+
+Note that the pressure and thrust increase with time (the thrust curve is progressive). This grain has a progressive thrust curve because the burn area increases with :math:`x` as the flame front moves outward from the initial core.
+
+Solid motor designers have devised a wide variety of grain geometries to achieve different thrust curves.
+
+.. figure:: figures/solid/thrust_curves.png
+  :align: center
+
+  Various grains and their thrust curves. Reprinted from `Richard Nakka's rocketry page <https://www.nakka-rocketry.net>`_.
