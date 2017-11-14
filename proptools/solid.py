@@ -1,23 +1,89 @@
-''' Solid rocket motor equations.
+""" Solid rocket motor equations.
+"""
 
-Matt Vernacchia
-proptools
-2016 Aug 22
-'''
+from scipy.integrate import cumtrapz
 
-def chamber_pressure(K_n, a, n, rho_solid, c_star):
-    ''' Chamber pressure due to solid propellant combustion.
+from proptools import nozzle
+
+
+def chamber_pressure(K, a, n, rho_solid, c_star):
+    """Chamber pressure due to solid propellant combustion.
 
     See equation 12-6 in Rocket Propulsion Elements 8th edition.
 
     Args:
-        K_n (scalar): Ratio of burning area to throat area, A_b/A_t [units: none].
+        K (scalar): Ratio of burning area to throat area, :math:`A_b/A_t` [units: dimensionless].
         a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
-        n (scalar): Propellant burn rate exponent [units: none].
+        n (scalar): Propellant burn rate exponent [units: dimensionless].
         rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
         c_star (scalar): Propellant combustion charateristic velocity [units: meter second**-1].
 
     Returns:
         Chamber pressure [units: pascal].
-    '''
-    return (K_n * rho_solid * a * c_star) ** (1 / (1 - n))
+    """
+    return (K * rho_solid * a * c_star) ** (1 / (1 - n))
+
+
+def burn_area_ratio(p_c, a, n, rho_solid, c_star):
+    """Get the burn area ratio, given chamber pressure and propellant properties.
+
+    Reference: Equation 12-6 in Rocket Propulsion Elements 8th edition.
+
+    Arguments:
+        p_c (scalar): Chamber pressure [units: pascal].
+        a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
+        n (scalar): Propellant burn rate exponent [units: none].
+        rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
+        c_star (scalar): Propellant combustion characteristic velocity [units: meter second**-1].
+
+    Returns:
+        scalar: Ratio of burning area to throat area, :math:`K = A_b/A_t` [units: dimensionless].
+    """
+    return p_c**(1 - n) / (rho_solid * a * c_star)
+
+
+def thrust_curve(A_b, x, A_t, A_e, p_a, a, n, rho_solid, c_star, gamma):
+    """Thrust vs time curve for a solid rocket motor.
+
+    Given information about the evolution of the burning surface of the propellant grain,
+    this function predicts the time-varying thrust of a solid rocket motor.
+
+    The evolution of the burning surface is described by two lists, ``A_b`` and ``x``.
+    Each element in the lists describes a step in the (discretized) evolution of the burning
+    surface. ``x[i]`` is the distance which the flame front must progress (normal to the burning
+    surface) to reach step ``i``. ``A_b[i]`` is the burn area at step ``i``.
+
+    Arguments:
+        A_b (list): Burn area at each step [units: meter**-2].
+        x (list): flame front progress distance at each step [units: meter].
+        A_t (scalar): Nozzle throat area [units: meter**2].
+        A_e (scalar): Nozzle exit area [units: meter**2].
+        p_a (scalar): Ambient pressure during motor firing [units: pascal].
+        a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
+        n (scalar): Propellant burn rate exponent [units: none].
+        rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
+        c_star (scalar): Propellant combustion characteristic velocity [units: meter second**-1].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+
+    Returns:
+        (tuple): tuple containing:
+
+            t (list): time at each step [units: second].
+            p_c (list): Chamber pressure at each step [units: pascal].
+            F (list): Thrust at each step [units: newton].
+    """
+    # Compute chamber pressure and exit pressure each flame progress distance x
+    # [units: pascal].
+    p_c = chamber_pressure(A_b / A_t, a, n, rho_solid, c_star)
+    p_e = p_c * nozzle.pressure_from_er(A_e / A_t, gamma)
+
+    # Compute the burn rate for each flame progress distance x [units: meter second**-1]
+    r = a * p_c**n
+
+    # Compute the thrust for each flame progress distance x [units: newton]
+    F = nozzle.thrust(A_t, p_c, p_e, gamma, p_a, A_e / A_t)
+
+    # Compute the time to reach each flame progress distance x [units: second]
+    t = cumtrapz(1 / r, x, initial=0)
+
+    return (t, p_c, F)

@@ -1,0 +1,2 @@
+Chamber pressure = 6.9 MPa
+Thrust (sea level) = 9.1 kN
