@@ -16,7 +16,7 @@ def chamber_pressure(K, a, n, rho_solid, c_star):
         a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
         n (scalar): Propellant burn rate exponent [units: dimensionless].
         rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
-        c_star (scalar): Propellant combustion charateristic velocity [units: meter second**-1].
+        c_star (scalar): Propellant combustion characteristic velocity [units: meter second**-1].
 
     Returns:
         Chamber pressure [units: pascal].
@@ -40,6 +40,32 @@ def burn_area_ratio(p_c, a, n, rho_solid, c_star):
         scalar: Ratio of burning area to throat area, :math:`K = A_b/A_t` [units: dimensionless].
     """
     return p_c**(1 - n) / (rho_solid * a * c_star)
+
+
+def burn_and_throat_area(F, p_c, p_e, a, n, rho_solid, c_star, gamma):
+    """Given thrust and chamber pressure, and propellant properties, find the burn area and throat area.
+
+    Assumes that the exit pressure is matched (:math:`p_e = p_a`).
+
+    Arguments:
+        F (scalar): Thrust force [units: newton].
+        p_c (scalar): Chamber pressure [units: pascal].
+        p_e (scalar): Nozzle exit pressure [units: pascal].
+        a (scalar): Propellant burn rate coefficient [units: meter second**-1 pascal**-n].
+        n (scalar): Propellant burn rate exponent [units: none].
+        rho_solid (scalar): Solid propellant density [units: kilogram meter**-3].
+        c_star (scalar): Propellant combustion characteristic velocity [units: meter second**-1].
+        gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
+
+    Returns:
+        (tuple): tuple containing:
+            A_b (scalar): Burn area [units: meter**2].
+            A_t (scalar): Throat area [units: meter**2].
+    """
+    C_F = nozzle.thrust_coef(p_c, p_e, gamma)
+    A_t = F / (C_F * p_c)
+    A_b = A_t * burn_area_ratio(p_c, a, n, rho_solid, c_star)
+    return (A_b, A_t)
 
 
 def thrust_curve(A_b, x, A_t, A_e, p_a, a, n, rho_solid, c_star, gamma):
