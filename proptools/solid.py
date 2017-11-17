@@ -1,4 +1,11 @@
 """ Solid rocket motor equations.
+
+.. autosummary::
+
+  chamber_pressure
+  burn_area_ratio
+  burn_and_throat_area
+  thrust_curve
 """
 
 from scipy.integrate import cumtrapz
@@ -9,7 +16,7 @@ from proptools import nozzle
 def chamber_pressure(K, a, n, rho_solid, c_star):
     """Chamber pressure due to solid propellant combustion.
 
-    See equation 12-6 in Rocket Propulsion Elements 8th edition.
+    Reference: Equation 12-6 in Rocket Propulsion Elements, 8th edition.
 
     Args:
         K (scalar): Ratio of burning area to throat area, :math:`A_b/A_t` [units: dimensionless].
@@ -19,7 +26,7 @@ def chamber_pressure(K, a, n, rho_solid, c_star):
         c_star (scalar): Propellant combustion characteristic velocity [units: meter second**-1].
 
     Returns:
-        Chamber pressure [units: pascal].
+        scalar: Chamber pressure [units: pascal].
     """
     return (K * rho_solid * a * c_star) ** (1 / (1 - n))
 
@@ -27,7 +34,7 @@ def chamber_pressure(K, a, n, rho_solid, c_star):
 def burn_area_ratio(p_c, a, n, rho_solid, c_star):
     """Get the burn area ratio, given chamber pressure and propellant properties.
 
-    Reference: Equation 12-6 in Rocket Propulsion Elements 8th edition.
+    Reference: Equation 12-6 in Rocket Propulsion Elements, 8th edition.
 
     Arguments:
         p_c (scalar): Chamber pressure [units: pascal].
@@ -58,8 +65,10 @@ def burn_and_throat_area(F, p_c, p_e, a, n, rho_solid, c_star, gamma):
         gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        (tuple): tuple containing:
+        tuple: tuple containing:
+
             A_b (scalar): Burn area [units: meter**2].
+
             A_t (scalar): Throat area [units: meter**2].
     """
     C_F = nozzle.thrust_coef(p_c, p_e, gamma)
@@ -92,10 +101,12 @@ def thrust_curve(A_b, x, A_t, A_e, p_a, a, n, rho_solid, c_star, gamma):
         gamma (scalar): Exhaust gas ratio of specific heats [units: dimensionless].
 
     Returns:
-        (tuple): tuple containing:
+        tuple: tuple containing:
 
             t (list): time at each step [units: second].
+
             p_c (list): Chamber pressure at each step [units: pascal].
+
             F (list): Thrust at each step [units: newton].
     """
     # Compute chamber pressure and exit pressure each flame progress distance x
