@@ -1,14 +1,12 @@
 """Models for convective heat transfer."""
 
 
-def adiabatic_wall_temperature(T_e, M, gamma, r=0.9):
+def adiabatic_wall_temperature(T_c, M, gamma, r=0.9, Pr=None):
     """Adiabatic wall temperature: the driving temperature for boundary layer convection.
 
-    Reference: M. Martinez-Sanchez, "Convective Heat Transfer: Reynolds Analogy,"
-        MIT 16.512 Lecture 7. https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-512-rocket-propulsion-fall-2005/lecture-notes/lecture_7.pdf
-
+    Reference: Huzel and Huang, equation 4-10-a
     Arguments:
-        T_e (scalar): Static temperature of the fluid external to the boundary layer
+        T_c (scalar): Stagnation temperature of the fluid external to the boundary layer
             [units: kelvin].
         M (scalar): Mach number of the flow [units: dimensionless].
         gamma (scalar): Fluid's ratio of specific heats [units: dimensionless].
@@ -18,7 +16,7 @@ def adiabatic_wall_temperature(T_e, M, gamma, r=0.9):
     Returns:
         scalar: The adiabatic wall temperature :math:`T_{aw}` [units: kelvin].
     """
-    return T_e * (1 + r * (gamma - 1) / 2 * M**2)
+    return T_c * (1 + r * (gamma - 1) / 2 * M**2) / (1 + (gamma - 1) / 2 * M**2)
 
 
 def bartz(p_c, c_star, D_t, D, c_p, mu_e, Pr, sigma=1.):
