@@ -1,4 +1,5 @@
 """Models for convective heat transfer."""
+from math import pi
 
 
 def adiabatic_wall_temperature(T_c, M, gamma, r=0.9, Pr=None):
@@ -106,3 +107,65 @@ def bartz_sigma_huzel(T_c, T_w, M, gamma):
     stag = 1 + (gamma - 1) / 2 * M**2    # Stagnation temperature ratio
     return ((0.5 * T_w / T_c * stag + 0.5)**0.68
             * (stag)**0.12)**-1
+
+
+def film_adiabatic_wall_temperature(eta_film, T_aw, T_f):
+    """The effective adiabatic wall temperature in the presence of film cooling.
+
+    The heat flux with film cooling can be approximated as:
+
+    .. math::
+      q_w = h_g (T_{aw}^f - T_w)
+
+    Where :math:`T_{aw}^f`is effective adiabatic wall temperature in the presence of film cooling,
+    and :math:`h_g` is the convection coefficient computed as if there were no film.
+
+    Reference:
+      [1] M. Martinez-Sanchez, "Ablative Cooling, Film Cooling,"
+        MIT 16.512 Lecture 10.
+    """
+    T_aw_f = T_aw - eta_film * (T_aw - T_f)
+    return T_aw_f
+
+
+def film_efficiency(x, D, m_dot_core, m_dot_film, mu_core, Pr_film=1, film_param=1, cp_ratio=1):
+    """The film efficiency for a film cooling layer.
+
+    Arguments:
+        x (scalar): Distance downstream from the film injection location [units: meter].
+        D (scalar): Passage diameter [units: meter].
+        m_dot_core (scalar): Core mass flow [units: kilogram second**-1].
+        m_dot_film (scalar): Film mass flow [units: kilogram second**-1].
+        mu_core (scalar): Dynamic viscosity of the core fluid [units: pascal second].
+        Pr_film (scalar, optional): Prandtl number of the film fluid [units: dimensionless].
+        film_param (scalar, optional): The film parameter, which is the ratio of the
+            film density to the core density: :math:`M_f = \rho_f / \rho_c`
+            [units: dimensionless].
+        cp_ratio (scalar, optional): The ratio of the core specific heat capacity to the film
+            specific heat capacity, :math:`c_{p,c}/c_{p,f}` [units: dimensionless].
+
+    References:
+      [1] M. Martinez-Sanchez, "Ablative Cooling, Film Cooling,"
+        MIT 16.512 Lecture 10.
+      [2] W. Rohsenow, J Hartnett, and Y Cho, "Handbook of Heat Transfer,"
+        Ch 17
+    """
+    # Estimate the film thickness [units: meter].
+    s = D / 4 * m_dot_film / m_dot_core / film_param
+
+    # Film flow area [units: meter**2].
+    A_film = pi * D * s
+
+    # Film flow mass flux [units: kilogram meter**-2 second**-1].
+    flux_film = m_dot_film / A_film
+
+    # Zeta parameter, dimensionless distance downstream from the film injection.
+    zeta = x / (film_param * s) * (flux_film * s / mu_core)**(-0.25)
+
+    # Find the film efficiency by an empirical correlation with the zeta distance and
+    # the Prandtl number. Martinez-Sanchez recommends this correlation, which is
+    # from Rohsenow.
+    eta = 1.9 * Pr_film**(0.66) / (1 + 0.329 * cp_ratio * zeta**0.8)
+    eta = min([1.0, eta])
+
+    return eta

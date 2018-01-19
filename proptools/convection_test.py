@@ -1,6 +1,8 @@
 """Unit tests for convection models."""
 import unittest
+from math import pi
 from proptools import convection, nozzle
+
 
 class TestTaw(unittest.TestCase):
     """Unit tests for convection.adiabatic_wall_temperature"""
@@ -114,6 +116,48 @@ class TestBartzSigmaHuzel(unittest.TestCase):
         sigma = convection.bartz_sigma_huzel(T_c, T_w, M, gamma)
 
         self.assertTrue(abs(sigma - sigma_huzel) < 0.05)
+
+
+class TestFilmCooling(unittest.TestCase):
+    """Test the film cooling functions."""
+
+    def test_ms_lec10_1(self):
+        """Test against the example from Martinez-Sanchez Lecture 10,
+        with 1% film mass flow."""
+        x = 0.5    # Distance downstream  [units: meter].
+        D = 0.5    # Diameter [units: meter].
+        m_dot_core = pi / 4 * D**2 * 5.33 * 253    # Core mass flow [units: kilogram second**-1].
+        m_dot_film = (1./99) * m_dot_core
+        mu_core = 2e-5 / 0.66   # Dynamic viscosity of the core fluid [units: pascal second].
+        Pr_film = 0.8
+        film_param = 1.265
+        cp_ratio = 0.8
+
+        # Answer from lecture notes
+        eta_ms = 0.361
+
+        eta = convection.film_efficiency(x, D, m_dot_core, m_dot_film,
+                                         mu_core, Pr_film, film_param, cp_ratio)
+        self.assertTrue(abs(eta - eta_ms) < 0.05)
+
+    def test_ms_lec10_10(self):
+        """Test against the example from Martinez-Sanchez Lecture 10,
+        with 10% film mass flow."""
+        x = 0.5    # Distance downstream  [units: meter].
+        D = 0.5    # Diameter [units: meter].
+        m_dot_core = pi / 4 * D**2 * 5.33 * 253    # Core mass flow [units: kilogram second**-1].
+        m_dot_film = (1./9) * m_dot_core
+        mu_core = 2e-5 / 0.66   # Dynamic viscosity of the core fluid [units: pascal second].
+        Pr_film = 0.8
+        film_param = 1.265
+        cp_ratio = 0.8
+
+        # Answer from lecture notes
+        eta_ms = 1.0
+
+        eta = convection.film_efficiency(x, D, m_dot_core, m_dot_film,
+                                         mu_core, Pr_film, film_param, cp_ratio)
+        self.assertTrue(abs(eta - eta_ms) < 0.05)
 
 
 if __name__ == '__main__':
