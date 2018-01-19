@@ -12,10 +12,15 @@ def adiabatic_wall_temperature(T_c, M, gamma, r=0.9, Pr=None):
         gamma (scalar): Fluid's ratio of specific heats [units: dimensionless].
         r (scalar): Recovery factor [units: dimensionless]. Value of 0.9
             recommended for turbulent flow.
+        Pr (scalar): Prandtl number [units: dimensionless]. If Pr is provided,
+            Pr will be used to estimate r (instead of the value of r given).
 
     Returns:
         scalar: The adiabatic wall temperature :math:`T_{aw}` [units: kelvin].
     """
+    if Pr is not None:
+        r = Pr**0.33    # Correlation from H&H for turbulent flow.
+
     return T_c * (1 + r * (gamma - 1) / 2 * M**2) / (1 + (gamma - 1) / 2 * M**2)
 
 
