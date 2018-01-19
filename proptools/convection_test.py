@@ -159,6 +159,16 @@ class TestFilmCooling(unittest.TestCase):
                                          mu_core, Pr_film, film_param, cp_ratio)
         self.assertTrue(abs(eta - eta_ms) < 0.05)
 
+    def test_film_adiabatic_wall_temperature(self):
+        """Test against the example from Martinez-Sanchez Lecture 10"""
+        T_aw_f = convection.film_adiabatic_wall_temperature(1, 3200, 1600)
+        self.assertEqual(T_aw_f, 1600)
+
+        T_aw_f = convection.film_adiabatic_wall_temperature(0.361, 3200, 1600)
+        # Error in notes, correct value is 2622 K, not 2296 K (In the notes,
+        # 700 K, the wall temp, is incorrectly used in place of 1600 K, the film temp)
+        self.assertTrue(abs(2622 - T_aw_f) < 1)
+
 
 if __name__ == '__main__':
     unittest.main()
