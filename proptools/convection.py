@@ -1,5 +1,6 @@
 """Models for convective heat transfer."""
 from math import pi
+import numpy as np
 
 
 def adiabatic_wall_temperature(T_c, M, gamma, r=0.9, Pr=None):
@@ -169,3 +170,45 @@ def film_efficiency(x, D, m_dot_core, m_dot_film, mu_core, Pr_film=1, film_param
     eta = min([1.0, eta])
 
     return eta
+
+
+def rannie_transpiration_cooling(cool_flux_fraction, Pr_film, Re_bulk):
+    """Rannie's equation for transpiration cooling.
+
+    Implements the "Rannie equation" for transpiration cooling, as given in [1].
+    Rannie's original paper [2] gives a slightly different form of the equation
+    (eqn. 19 in [2]).
+
+    Warning: Huzel [1] states this equation "predicts coolant flows slightly lower
+    than those required experimentally", and suggests that the predicted
+    cooling flow will be about 85% of the actual required cooling flow.
+
+    Arguments:
+        cool_flux_fraction (scalar): Coolant mass flux through the wall /
+            hot gas mass flux parallel to the wall
+            [units: dimensionless].
+        Pr_film (scalar): Mean film Prandtl number [units: dimensionless].
+        Re_bulk (scalar): Bulk hot-gas Reynolds number
+
+    Returns:
+        scalar: the ratio :math:`\frac{T_{aw} - T_{co}}{T_{wg} - T_{co}}`, where
+            :math:`T_{aw}` is the adiabatic wall temperature of the gas flow,
+            :math:`T_{wg}` is the gas-side wall temperature,
+            :math:`T_{co}` is the coolant initial bulk temperature.
+
+
+    References:
+      [1] Huzel and Huang Equation 4-37.
+      [2]  Rannie, W.D.; Dunn, Louis G.; Millikan, Clark B. "A simplified theory of
+           porous wall cooling." JPL, Pasadena 1947.
+           Online: https://trs.jpl.nasa.gov/handle/2014/45706
+    """
+    G = cool_flux_fraction
+    assert G >= 0    # Mass fluxes must be positive
+    assert G < 1    # Model is probably not valid
+    R = Re_bulk**0.1
+    temp_ratio = ((1 + (1.18 * R - 1)
+                  * (1 - np.exp(-37 * G * R)))
+                  * np.exp(37 * G * R * Pr_film))
+    assert temp_ratio >= 1    # If temp_ratio < 1, then T_{wg}> T_{aw}, which is not possible
+    return temp_ratio
