@@ -217,7 +217,7 @@ def mach_from_er(er, gamma):
     X[0] = (u*k)**(B/(1-B))
     M[0] = X[0]
 
-    for i in xrange(1,n):
+    for i in range(1, n):
         lamb = 1/( 2*M[i-1]**(2/B)*(B-2) + M[i-1]**2 *B**2*k**2*u**2 )
         X[i] = lamb*M[i-1]*B*( M[i-1]**(2/B) - M[i-1]**2*B*k**2*u**2 \
             + ( M[i-1]**(2+2/B)*k**2*u**2*(B**2-4*B+4) \
