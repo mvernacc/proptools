@@ -25,6 +25,39 @@ def adiabatic_wall_temperature(T_c, M, gamma, r=0.9, Pr=None):
 
     return T_c * (1 + r * (gamma - 1) / 2 * M**2) / (1 + (gamma - 1) / 2 * M**2)
 
+def long_tube_coeff(mass_flux, D, c_p, mu, k):
+    """Convection coefficient for flow in a long tube.
+
+    This model for convection was developed from experiments with fully-developed
+    flow in long tubes. It is taken from Eq. 11.35 in Hill & Peterson:
+
+    .. math::
+        \frac{h}{G c_p} = 0.023 (\frac{G D}{ \mu_b})^{-0.2} (\frac{\mu c_p}{k})_b^{-0.67}
+
+    where :math:`G` is the average mass flux through the tube, and the subscript :math:`b`
+    denotes properties evaluated at the bulk fluid temperature.
+
+    References:
+        [1] P. Hill and C.Peterson, "Mechanics and Thermodynamics of Propulsion",
+            2nd edition, 1992.
+
+    Arguments:
+        mass_flux (scalar): Mass flux through the tube
+            [units: kilogram meter**-2 second**-1].
+        D (scalar): Tube (hydraulic) diameter [units: meter].
+        c_p (scalar): Heat capacity at constant pressure of the fluid flowing
+            through the tube [units: joule kilogram**-1 kelvin**-1].
+        mu (scalar): viscosity of the fluid [units: pascal second].
+        k (scalar): Thermal conductivty of the fluid [units: watt meter**-1 kelvin**-1]
+
+    Returns:
+        scalar: The convection coefficient :math:`h` [units: watt meter**-2 kelvin**-1].
+    """
+    Pr = mu * c_p / k
+    Re = mass_flux *  D / mu
+    h = 0.023 * mass_flux * c_p * Re**-0.2 * Pr**-0.67
+    return h
+
 
 def bartz(p_c, c_star, D_t, D, c_p, mu_e, Pr, sigma=1.):
     """Bartz equation for estimation of the convection coefficient.

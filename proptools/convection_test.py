@@ -14,6 +14,30 @@ class TestTaw(unittest.TestCase):
         # example to compare to.
         pass
 
+class TestLongTube(unittest.TestCase):
+    """Unit tests for convection.long_tube_coeff."""
+
+    def test_1(self):
+        """No examples are given in Hill & Peterson, I had to come up with this."""
+        # Setup
+        Re = 1e6
+        Pr = 0.7
+        mass_flux = 1.
+        mu = 2e-5
+        c_p = 1000.
+        k = mu * c_p / Pr
+        D = Re * mu / mass_flux
+
+        # Action
+        h = convection.long_tube_coeff(mass_flux, D, c_p, mu, k)
+
+        # Verification
+        # Lefthand side of equation 11.35 from H & P
+        #  = h / (c_p mass_flux)
+        # units: dimensionless
+        lhs = 0.023 * Re**-0.2 * Pr**-0.67
+        self.assertTrue(abs(lhs - h / (c_p * mass_flux)) < 1e-6)
+
 
 class TestBartz(unittest.TestCase):
     """Unit tests for convection.bartz."""
