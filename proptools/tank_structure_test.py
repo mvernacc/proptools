@@ -1,5 +1,5 @@
 import unittest
-import tank_structure as ts
+from proptools import tank_structure as ts
 from units import inch2meter, psi2pascal, lbf2newton, lbm2kilogram
 
 
