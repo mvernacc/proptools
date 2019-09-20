@@ -15,9 +15,21 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+INSTALL_REQUIRES = [
+    'numpy',
+    'matplotlib',
+    'scikit-aero',
+    'scipy',
+    ]
+TEST_REQUIRES = [
+        'pytest',
+    ]
+DOCS_REQUIRES = [
+    'sphinx_rtd_theme',
+    ]
 setup(
     name='proptools',
-    
+
     version='0.0.0a0',
 
     description='Rocket propulsion design calculation tools.',
@@ -39,17 +51,19 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.7',
     ],
 
-     # What does your project relate to?
+    # What does your project relate to?
     keywords='rocket propulsion engineering aerospace',
 
-
-    install_requires=['numpy', 'sphinx_rtd_theme', 'matplotlib', 'scikit-aero'],
+    install_requires=INSTALL_REQUIRES,
+    extras_require={
+        'test': TEST_REQUIRES + INSTALL_REQUIRES,
+        'docs': DOCS_REQUIRES + INSTALL_REQUIRES,
+    },
 
     packages=find_packages(),
 
     scripts=[],
-
 )

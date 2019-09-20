@@ -6,8 +6,6 @@ References:
         http://www.idealvalve.com/pdf/Flow-Calculation-for-Gases.pdf
 """
 import numpy as np
-import matplotlib.pyplot as plt
-
 import proptools.constants
 
 
@@ -105,4 +103,5 @@ def demo_plots():
 
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
     demo_plots()
