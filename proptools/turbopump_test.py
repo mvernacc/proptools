@@ -1,5 +1,5 @@
 import unittest
-import turbopump
+from proptools import turbopump
 
 class TestStringMethods(unittest.TestCase):
 

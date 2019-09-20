@@ -19,3 +19,11 @@ charge = 1.602176e-19
 
 # unified atomic mass unit equivalent in kilograms.
 amu_kg = 1.660539e-27
+
+# One standard cubic foot of gas in moles [units: mole].
+# See https://en.wikipedia.org/wiki/Standard_cubic_foot#Definitions
+scf_mole = 1.19804
+
+# Molar amss of dry air [units: kilogram mole**-1].
+# See https://www.engineeringtoolbox.com/molecular-mass-air-d_679.html
+m_molar_air = 28.9647e-3

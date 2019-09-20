@@ -129,7 +129,6 @@ def solve_nonsimple(x, M_in, T_o_in, mdot, c_p, gamma, f_f, f_q, f_A):
 
 
 def main():
-    from matplotlib import pyplot as plt
     def f_f(x):
         return 0
     def f_q(x):
@@ -248,4 +247,5 @@ def main():
 
 
 if __name__ == '__main__':
+    from matplotlib import pyplot as plt
     main()
