@@ -23,6 +23,8 @@ INSTALL_REQUIRES = [
     ]
 TEST_REQUIRES = [
         'pytest',
+        'coverage',
+        'pytest-cov',
     ]
 DOCS_REQUIRES = [
     'sphinx_rtd_theme',

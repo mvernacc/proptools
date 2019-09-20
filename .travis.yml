@@ -3,7 +3,6 @@ python:
   - "3.6"      # current default Python on Travis CI
   - "3.7"
   - "3.7-dev"  # 3.7 development branch
-  - "3.8-dev"  # 3.8 development branch
 
 before_install:
   - pip install -U pip
@@ -15,3 +14,6 @@ install:
 # command to run tests
 script:
   - pytest
+
+after_success:
+  - codecov # submit coverage
