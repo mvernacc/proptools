@@ -1,6 +1,8 @@
 # proptools
 
-[![Build Status](https://travis-ci.org/mvernacc/proptools.svg?branch=master)](https://travis-ci.org/mvernacc/proptools)
+[![Build Status](https://travis-ci.org/mvernacc/proptools.svg?branch=master)](https://travis-ci.org/mvernacc/proptools) [![codecov](https://codecov.io/gh/mvernacc/proptools/branch/master/graph/badge.svg)](https://codecov.io/gh/mvernacc/proptools)
+
+
 
 Rocket propulsion design calculation tools.
 
