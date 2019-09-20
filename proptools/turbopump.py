@@ -5,7 +5,7 @@ proptools
 2016 Apr 3
 '''
 from __future__ import division
-import nozzle
+from proptools import nozzle
 import math
 import numpy as np
 from scipy.interpolate import RectBivariateSpline, interp1d
@@ -255,11 +255,11 @@ def pump_efficiency_demo():
     m_dot = gpm2m_dot(np.array([50, 100, 150, 350]), rho)
     N = rpm2radsec(np.linspace(10e3, 400e3))
     dp = 10e6
-    print dp2head(dp, rho)
+    print(dp2head(dp, rho))
     for m in m_dot:
         eta = np.zeros(len(N))
         Ns_us = np.zeros(len(N))
-        for i in xrange(len(N)):
+        for i in range(len(N)):
             eta[i] = pump_efficiency(dp, m, rho, N[i])
             Ns_us[i] = pump_specific_speed_us(dp, m, rho, N[i])
         plt.semilogx(Ns_us, eta, label='Q = {0:.0f} gpm'.format(m_dot2gpm(m, rho)))
