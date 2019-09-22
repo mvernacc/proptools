@@ -36,7 +36,7 @@ with open("README.md", "r") as fh:
 setup(
     name='proptools-rocket',
 
-    version='0.0.1',
+    version='0.0.2',
 
     description='Rocket propulsion design calculation tools.',
 
