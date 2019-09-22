@@ -29,15 +29,19 @@ TEST_REQUIRES = [
 DOCS_REQUIRES = [
     'sphinx_rtd_theme',
     ]
-setup(
-    name='proptools',
 
-    version='0.0.0a0',
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setup(
+    name='proptools-rocket',
+
+    version='0.0.1',
 
     description='Rocket propulsion design calculation tools.',
 
     author='Matt Vernacchia',
-    author_email='mvernacc@mit.edu.',
+    author_email='mvernacc@mit.edu',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -58,6 +62,14 @@ setup(
 
     # What does your project relate to?
     keywords='rocket propulsion engineering aerospace',
+
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+
+    project_urls={
+        'Documentation': 'https://proptools.readthedocs.io/en/latest/',
+        'Source Code': 'https://github.com/mvernacc/proptools',
+    },
 
     install_requires=INSTALL_REQUIRES,
     extras_require={
