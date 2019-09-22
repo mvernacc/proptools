@@ -6,6 +6,7 @@ python:
 
 before_install:
   - pip install -U pip
+  - pip install codecov
 
 # command to install dependencies
 install:
