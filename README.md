@@ -6,6 +6,19 @@
 
 Rocket propulsion design calculation tools.
 
+## Installation
+
+```bash
+pip install proptools-rocket
+```
+
+Or install from source:
+
+```bash
+git clone https://github.com/mvernacc/proptools.git
+cd proptools
+pip install -e .
+```
 
 ## Overview
 
