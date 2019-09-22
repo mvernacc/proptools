@@ -1,7 +1,7 @@
 language: python
 python:
-  - "3.6"      # current default Python on Travis CI
   - "3.7"
+  - "3.6"      # current default Python on Travis CI
   - "3.7-dev"  # 3.7 development branch
 
 before_install:
@@ -18,3 +18,13 @@ script:
 
 after_success:
   - codecov # submit coverage
+
+deploy:
+  provider: pypi
+  user: "mvernacc"
+  password:
+    secure: U3Fh3bdzkoCi9vMJYcMK3sI2ua470F6FmZd1nmxzyAChhJkZUDDicvuZs71f3CU4L4sDqItr3HCGowTl7jO8vbew+NTapVGgQaFGRDSiH6/ilQSo8id4AHGrhaz2HnZ0wTwacAOms/fbwQ81PSHEnNT6Qq1E7L/CQEr+AFd0OctOoqK3ZoDlYZ0eGjlFViFvnFRYlIeePbt3Iu7Fzsu8bkr/WsMVC6a3QD4wFF6FYt9rn0JooksIKe2btPYjFvigvJYiNS/1E3aKwldMM2ogiZO91ifqbvLeFaJmLEm5Dq3IucfK1lqd5WOYTC3Tx7yw8jA/u52ie1hrAnrzuOq3lin726FH/XCOO2NUkzADN/V1f2Q60k4hWo7XTdFv+97s6tAFEJlU0ZLG9og1vqf+gDBaJ0p1H0htcWdwm0NtaJu3BS4B09v/enFWXwq9jGcTd10sg5OTSudZpXrWCBIG6r05r5UBr+RmKopFC0HmC0nMIhL8arL7CkkMJkt6dVQXQDy9EXekYNcKS9M3ms3pRTYfvlyAX0/WOIX7vUeZMM83JEOWrS5N57ftM4bkIotxazka1jqGWIuRxQfyOd+EbuZLREwsAePTuIDXoSCXivUtms55LZU6iwb+347cD48V1GcD+0bypzTu/PDCPH4FwA/G759j9NCHJk2cXn/WTJg=
+  on:
+    tags: true
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
