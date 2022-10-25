@@ -1,0 +1,32 @@
+name: Lint and test
+
+on:
+  pull_request: []
+
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup
+        run: |
+          # Set up pip and a virtual env
+          cd ..
+          python -m pip install --upgrade pip==22.3
+          python -m venv ./env
+          source ./env/bin/activate
+          cd proptools
+          pip install -e ".[test]"
+      # TODO lint
+      - name: Test
+        run: |
+          source ../env/bin/activate
+          pytest
